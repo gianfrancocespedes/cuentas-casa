@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es" id="webPage" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuentas de la casa</title>
+    <!-- Librerías de CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.1.2/css/all.css">
+    <!-- Librerías de JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    
+</head>
+<body>
+    <header class="container">
+        <h1><i class="fa-solid fa-file-invoice-dollar"></i>&nbsp&nbspCuentas de la casa&nbsp&nbsp<i class="fa-solid fa-house"></i></h1>
+    </header>
+    <main class="container">
+        <div class="grid">
+            <div></div><div></div><div></div><div></div>
+            <div><button onclick="cambiarTema()" id="boton_tema"><i class='fa-solid fa-brightness'></i>&nbsp&nbspCambiar Tema</button></div>
+        </div>
+        <form id='form_principal'>
+            <section>
+                <h3>Mes y año</h3>
+                <label>Mes</label>
+                <input type="text" value="8" id="calculo_mes" name="calculo_mes">
+                <label>Año</label>
+                <input type="text" value="2022" id="calculo_anio" name="calculo_anio">
+            </section>
+            <section>
+                <h3>Cantidad total de personas</h3>
+                <label>Primer piso</label>
+                <input type="text" value="5" id="personas_piso1" name="personas_piso1">
+                <label>Departamento 2A</label>
+                <input type="text" value="3" id="personas_departamento2A" name="personas_departamento2A">
+                <label>Departamento 2B</label>
+                <input type="text" value="3" id="personas_departamento2B" name="personas_departamento2B">
+                <label>Departamento 3A</label>
+                <input type="text" value="1" id="personas_departamento3A" name="personas_departamento3A">
+                <label>Departamento 3B</label>
+                <input type="text" value="2" id="personas_departamento3B" name="personas_departamento3B">
+            </section>
+            <hr>
+            <section>
+                <h3>Luz</h3>
+                <div class="grid">
+                    <div>
+                        <h4>Medidor(mes pasado):</h4>
+                        <label>Departamento 2A</label>
+                        <input type="text" value="1176.60" id="medidor_pasado_departamento2A" name="medidor_pasado_departamento2A">
+                        <label>Departamento 2B</label>
+                        <input type="text" value="992.56" id="medidor_pasado_departamento2B" name="medidor_pasado_departamento2B">
+                        <label>Departamento 3A</label>
+                        <input type="text" value="746.62" id="medidor_pasado_departamento3A" name="medidor_pasado_departamento3A">
+                        <label>Departamento 3B</label>
+                        <input type="text" value="27.30" id="medidor_pasado_departamento3B" name="medidor_pasado_departamento3B">
+                    </div>
+                    <div>
+                        <h4>Medidos(mes actual):</h4>
+                        <label>Departamento 2A</label>
+                        <input type="text" value="1195.20" id="medidor_actual_departamento2A" name="medidor_actual_departamento2A">
+                        <label>Departamento 2B</label>
+                        <input type="text" value="1145.70" id="medidor_actual_departamento2B" name="medidor_actual_departamento2B">
+                        <label>Departamento 3A</label>
+                        <input type="text" value="803.00" id="medidor_actual_departamento3A" name="medidor_actual_departamento3A">
+                        <label>Departamento 3B</label>
+                        <input type="text" value="61.30" id="medidor_actual_departamento3B" name="medidor_actual_departamento3B">
+                    </div>
+                </div>
+                <label>Valor de KW:</label>
+                <input type="text" value="0.6611" id="valor_kw" name="valor_kw">
+                <label>Alumbrado público:</label>
+                <input type="text" value="7.70" id="alumbrado_publico" name="alumbrado_publico">
+                <label>Total de Luz (recibo):</label>
+                <input type="text" value="250" id="total_luz" name="total_luz">
+            </section>
+            <hr>
+            <section>
+                <h3>Agua</h3>
+                <label>Total Agua (recibo):</label>
+                <input type="text" value="149.10" id="total_agua" name="total_agua">
+            </section>
+            <hr>
+            <section>
+                <h3>Gas</h3>
+                <label>Primer piso</label>
+                <input type="text" value="20" id="gas_piso1" name="gas_piso1">
+                <label>Departamento 2A</label>
+                <input type="text" value="20.50" id="gas_departamento2A" name="gas_departamento2A">
+                <label>Departamento 2B</label>
+                <input type="text" value="17.20" id="gas_departamento2B" name="gas_departamento2B">
+                <label>Departamento 3A</label>
+                <input type="text" value="0" id="gas_departamento3A" name="gas_departamento3A">
+                <label>Departamento 3B</label>
+                <input type="text" value="36.00" id="gas_departamento3B" name="gas_departamento3B">
+            </section>
+            <hr>
+            <section>
+                <h3>Cable e internet</h3>
+                <label>Primer piso</label>
+                <input type="text" value="145" id="cabInt_piso1" name="cabInt_piso1">
+                <label>Departamento 2A</label>
+                <input type="text" value="0" id="cabInt_departamento2A" name="cabInt_departamento2A">
+                <label>Departamento 2B</label>
+                <input type="text" value="0" id="cabInt_departamento2B" name="cabInt_departamento2B">
+                <label>Departamento 3A</label>
+                <input type="text" value="0" id="cabInt_departamento3A" name="cabInt_departamento3A">
+                <label>Departamento 3B</label>
+                <input type="text" value="0" id="cabInt_departamento3B" name="cabInt_departamento3B">
+            </section>
+            <section>
+                <button type="submit">Calcular Cuentas</button>
+                <!-- <input  id="enviar" type="submit" value="Calcular Cuentas"> -->
+            </section>
+        </form>
+        <hr id="linea" style="visibility: hidden;">
+        <section id="descargas" style="visibility: hidden;">
+            <h3 id="fecha_hora_calculo"></h3>
+            <div class="grid">
+                <div>
+                    <button data-target="modal_piso1" onClick="toggleModal(event)"><i class="fa-solid fa-file-pdf"></i>&nbsp&nbspVer cuentas del "Piso 1"</button>
+                </div>
+                <div>
+                    <button onClick="descargarPDF('1')"><i class="fa-solid fa-download"></i>&nbsp&nbspDescargar cuentas del "Piso 1"</button>
+                </div>
+            </div>
+            <div class="grid">
+                <div>
+                    <button data-target="modal_departamento2A" onClick="toggleModal(event)"><i class="fa-solid fa-file-pdf"></i>&nbsp&nbspVer cuentas del "Departamento 2A"</button>
+                </div>
+                <div>
+                    <button onClick="descargarPDF('2A')"><i class="fa-solid fa-download"></i>&nbsp&nbspDescargar cuentas del "Departamento 2A"</button>
+                </div>
+            </div>
+            <div class="grid">
+                <div>
+                    <button data-target="modal_departamento2B" onClick="toggleModal(event)"><i class="fa-solid fa-file-pdf"></i>&nbsp&nbspVer cuentas del "Departamento 2B"</button>
+                </div>
+                <div>
+                    <button onClick="descargarPDF('2B')"><i class="fa-solid fa-download"></i>&nbsp&nbspDescargar cuentas del "Departamento 2B"</button>
+                </div>
+            </div>
+            <div class="grid">
+                <div>
+                    <button data-target="modal_departamento3A" onClick="toggleModal(event)"><i class="fa-solid fa-file-pdf"></i>&nbsp&nbspVer cuentas del "Departamento 3A"</button>
+                </div>
+                <div>
+                    <button onClick="descargarPDF('3A')"><i class="fa-solid fa-download"></i>&nbsp&nbspDescargar cuentas del "Departamento 3A"</button>
+                </div>
+            </div>
+            <div class="grid">
+                <div>
+                    <button data-target="modal_departamento3B" onClick="toggleModal(event)"><i class="fa-solid fa-file-pdf"></i>&nbsp&nbspVer cuentas del "Departamento 3B"</button>
+                </div>
+                <div>
+                    <button onClick="descargarPDF('3B')"><i class="fa-solid fa-download"></i>&nbsp&nbspDescargar cuentas del "Departamento 3B"</button>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Modal Piso 1 -->
+    <dialog id="modal_piso1">
+        <article>
+            <!-- <header>
+                <a href="#close" aria-label="Close" class="close" data-target="modal-example" onClick="toggleModal(event)"></a>
+                Modal title
+            </header> -->
+            <h5>Detalle de las cuentas correspondientes al primer piso</h5>
+            <iframe id="iframe_piso1" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+            <footer>
+                <a href="#" role="button" class="secondary" data-target="modal_piso1" onClick="toggleModal(event)">
+                    Cerrar
+                </a>
+                <a href="#" role="button" data-target="modal_piso1" onClick="descargarPiso1();toggleModal(event);">
+                    Descargar PDF
+                </a>
+            </footer>
+        </article>
+    </dialog>
+    <!-- Modal Piso 1 -->
+
+    <!-- Modal Departamento 2A -->
+    <dialog id="modal_departamento2A">
+        <article>
+            <h5>Detalle de las cuentas correspondientes al Dep. 2A</h5>
+            <iframe id="iframe_departamento2A" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+            <footer>
+                <a href="#" role="button" class="secondary" data-target="modal_departamento2A" onClick="toggleModal(event)">
+                    Cerrar
+                </a>
+                <a href="#" role="button" data-target="modal_departamento2A" onClick="descargarPDF('2A');toggleModal(event);">
+                    Descargar PDF
+                </a>
+            </footer>
+        </article>
+    </dialog>
+    <!-- Modal Departamento 2A -->
+
+    <!-- Modal Departamento 2B -->
+    <dialog id="modal_departamento2B">
+        <article>
+            <h5>Detalle de las cuentas correspondientes al Dep. 2B</h5>
+            <iframe id="iframe_departamento2B" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+            <footer>
+                <a href="#" role="button" class="secondary" data-target="modal_departamento2B" onClick="toggleModal(event)">
+                    Cerrar
+                </a>
+                <a href="#" role="button" data-target="modal_departamento2B" onClick="descargarPDF('2B');toggleModal(event);">
+                    Descargar PDF
+                </a>
+            </footer>
+        </article>
+    </dialog>
+    <!-- Modal Departamento 2B -->
+
+    <!-- Modal Departamento 3A -->
+    <dialog id="modal_departamento3A">
+        <article>
+            <h5>Detalle de las cuentas correspondientes al Dep. 3A</h5>
+            <iframe id="iframe_departamento3A" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+            <footer>
+                <a href="#" role="button" class="secondary" data-target="modal_departamento3A" onClick="toggleModal(event)">
+                    Cerrar
+                </a>
+                <a href="#" role="button" data-target="modal_departamento3A" onClick="descargarPDF('3A');toggleModal(event);">
+                    Descargar PDF
+                </a>
+            </footer>
+        </article>
+    </dialog>
+    <!-- Modal Departamento 3A -->
+
+    <!-- Modal Departamento 3B -->
+    <dialog id="modal_departamento3B">
+        <article>
+            <h5>Detalle de las cuentas correspondientes al Dep. 3B</h5>
+            <iframe id="iframe_departamento3B" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
+            <footer>
+                <a href="#" role="button" class="secondary" data-target="modal_departamento3B" onClick="toggleModal(event)">
+                    Cerrar
+                </a>
+                <a href="#" role="button" data-target="modal_departamento3B" onClick="descargarPDF('3B');toggleModal(event);">
+                    Descargar PDF
+                </a>
+            </footer>
+        </article>
+    </dialog>
+    <!-- Modal Departamento 3B -->
+
+
+    <!-- Código JavaScript -->
+    <script src="script.js"></script>
+    <script src="modal.js"></script>
+</body>
+</html>
