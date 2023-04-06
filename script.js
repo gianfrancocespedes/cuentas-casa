@@ -1,3 +1,13 @@
+document.getElementById("form_principal").addEventListener('keyup', e => {
+    // console.log(e);
+    // console.log(e.target.name);
+    // console.log(e.target.value);
+    // console.log(Array.from(document.forms["form_principal"].getElementsByTagName("input")));
+    let nameField = String(e.target.name);
+    let valueField = String(e.target.value);
+    localStorage.setItem(nameField, valueField);
+});
+
 /**
  * Variable globales
  */
@@ -38,7 +48,7 @@ document.getElementById("form_principal").addEventListener('submit', e => {
         new FormData(e.target)
     );
     datos = data;
-    //console.log(datos);
+    //console.log(Object.keys(data));
     calcularCuentas();
     //console.log(JSON.stringify(data));
     
@@ -60,7 +70,7 @@ function calcularCuentas() {
             faltanDatos = true;
         }
     })
-    if(faltanDatos)return;
+    if(faltanDatos) return;
 
     var fecha_hora_calculo = new Date();
     if(!visible){
@@ -248,3 +258,16 @@ function getTotalLuzDep(){
     return totalesLuz.departamento2A*1 + totalesLuz.departamento2B*1 + totalesLuz.departamento3A*1
         + totalesLuz.departamento3B*1
 }
+
+function getCacheValues(){
+    //Recuperamos los nombres de los inputs del formulario
+    let arrFieldNames = Array.from(document.forms["form_principal"].getElementsByTagName("input"));
+    for(fieldName of arrFieldNames){
+        let cacheValue = localStorage.getItem(fieldName.name);
+        if(cacheValue){
+            document.getElementById(fieldName.name).value = cacheValue;
+        }
+    }
+}
+
+getCacheValues();
