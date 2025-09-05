@@ -501,7 +501,25 @@
 
 
     <!-- Código JavaScript -->
-    <script src="script.js"></script>
-    <script src="modal.js"></script>
+    <!-- Utilidades genéricas primero -->
+    <script src="js/utils/formatters.js"></script>
+    <script src="js/utils/dom.js"></script>
+    <script src="js/utils/storage.js"></script>
+    <script src="js/utils/pdf.js"></script>
+
+    <!-- Lógica específica del proyecto -->
+    <script src="js/core/validation.js"></script>
+    <script src="js/core/calculator.js"></script>
+
+    <!-- Características específicas -->
+    <script src="js/features/theme.js"></script>
+    <script src="js/features/history.js"></script>
+    <script src="js/features/import-export.js"></script>
+
+    <!-- UI -->
+    <script src="js/ui/modal.js"></script>
+
+    <!-- Inicialización al final -->
+    <script src="js/core/app.js"></script>
 </body>
 </html>
