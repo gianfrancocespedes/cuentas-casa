@@ -222,9 +222,9 @@ MIT License - Puedes usar, modificar y distribuir libremente
 ## 👨‍💻 Autor
 
 **Gianfranco Cespedes**
-- 📧 Email: [tu-email@example.com](mailto:tu-email@example.com)  
-- 🐙 GitHub: [@tu-usuario](https://github.com/tu-usuario)
-- 💼 LinkedIn: [tu-perfil](https://linkedin.com/in/tu-perfil)
+- 📧 Email: [gianmcf2@gmail.com](mailto:gianmcf2@gmail.com)  
+- 🐙 GitHub: [@gianfrancocespedes](https://github.com/gianfrancocespedes)
+- 💼 LinkedIn: [gianfrancocespedes](https://linkedin.com/in/gianfrancocespedes)
 
 ---
 
