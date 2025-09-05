@@ -18,6 +18,7 @@
     </header>
     <main class="container">
         <div style="text-align: right; margin-bottom: var(--pico-spacing);">
+            <button onclick="abrirModalImportExport()" style="margin-right: var(--pico-spacing);"><i class="fa-solid fa-file-import"></i>&nbsp;&nbsp;Importar/Exportar Datos</button>
             <button onclick="limpiarFormulario()" style="margin-right: var(--pico-spacing);"><i class="fa-solid fa-eraser"></i>&nbsp;&nbsp;Limpiar Datos</button>
             <button onclick="cambiarTema()" id="boton_tema"><i class='fa-solid fa-brightness'></i>&nbsp;&nbsp;Cambiar Tema</button>
         </div>
@@ -447,6 +448,56 @@
         </article>
     </dialog>
     <!-- Modal para Detalles del Histórico -->
+
+    <!-- Modal para Importar/Exportar Datos -->
+    <dialog id="modal_import_export">
+        <article style="max-width: 600px;">
+            <header>
+                <a href="#close" aria-label="Close" class="close" data-target="modal_import_export" onclick="toggleModal(event)"></a>
+                <h4><i class="fa-solid fa-file-import"></i> Importar/Exportar Datos</h4>
+            </header>
+            
+            <!-- Sección de Importación -->
+            <div style="margin-bottom: var(--pico-spacing);">
+                <h5><i class="fa-solid fa-file-upload"></i> Importar Datos</h5>
+                <small style="display: block; margin-bottom: var(--pico-spacing);">
+                    <i class="fa-solid fa-info-circle"></i> 
+                    Carga un archivo de respaldo para restaurar tu histórico de cálculos. Puedes elegir sobreescribir completamente o añadir a los datos actuales.
+                </small>
+                <input type="file" id="file_import" accept=".json,.txt" style="margin-bottom: var(--pico-spacing);">
+                
+                <label for="sobreescribir_historial" style="display: flex; align-items: center; margin-bottom: var(--pico-spacing);">
+                    <input type="checkbox" id="sobreescribir_historial" checked style="margin-right: 0.5rem;">
+                    <span>Sobreescribir histórico actual (si está desmarcado, se añadirán los registros)</span>
+                </label>
+                
+                <button onclick="importarDatos()" style="width: 100%;">
+                    <i class="fa-solid fa-upload"></i>&nbsp;&nbsp;Importar Archivo
+                </button>
+            </div>
+
+            <hr>
+
+            <!-- Sección de Exportación -->
+            <div>
+                <h5><i class="fa-solid fa-file-download"></i> Exportar Datos</h5>
+                <small style="display: block; margin-bottom: var(--pico-spacing);">
+                    <i class="fa-solid fa-info-circle"></i> 
+                    Descarga un archivo de respaldo con todo tu histórico de cálculos para guardarlo como copia de seguridad.
+                </small>
+                <button onclick="exportarDatos()" style="width: 100%;">
+                    <i class="fa-solid fa-download"></i>&nbsp;&nbsp;Descargar Respaldo
+                </button>
+            </div>
+
+            <footer>
+                <a href="#" role="button" class="secondary" data-target="modal_import_export" onclick="toggleModal(event)">
+                    Cerrar
+                </a>
+            </footer>
+        </article>
+    </dialog>
+    <!-- Modal para Importar/Exportar Datos -->
 
 
     <!-- Código JavaScript -->
