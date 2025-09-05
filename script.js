@@ -151,6 +151,17 @@ function calcularCuentas() {
     setTimeout(() => {
         gestionarPDFs();
         
+        // GUARDAR EN HISTÓRICO después del cálculo exitoso
+        const resultadosCalculados = {
+            total_luz_piso1: (parseFloat(datos.total_luz) - getTotalLuzDep()).toFixed(2),
+            agua_piso1: ((parseFloat(datos.total_agua) / getTotalPersonas()) * datos.personas_piso1).toFixed(2),
+            gas_piso1: datos.gas_piso1,
+            cabInt_piso1: datos.cabInt_piso1,
+            totales_luz_departamentos: { ...totalesLuz }
+        };
+        
+        guardarEnHistorial(datos, resultadosCalculados);
+        
         // Restaurar botón después del cálculo
         botonCalcular.innerHTML = textoOriginal;
         botonCalcular.disabled = false;
@@ -166,16 +177,26 @@ function validarFormulario() {
     let esValido = true;
     const errores = [];
     
-    // VALIDAR CAMPOS OBLIGATORIOS (NO VACÍOS) - Versión simple como el original
-    Object.values(datos).forEach(valor => {
-        if (valor === "") {
+    // CAMPOS REALMENTE OBLIGATORIOS (no pueden estar vacíos)
+    const camposObligatorios = [
+        'calculo_mes', 'calculo_anio',
+        'medidor_pasado_departamento2A', 'medidor_pasado_departamento2B', 
+        'medidor_pasado_departamento3A', 'medidor_pasado_departamento3B',
+        'medidor_actual_departamento2A', 'medidor_actual_departamento2B',
+        'medidor_actual_departamento3A', 'medidor_actual_departamento3B',
+        'valor_kw', 'alumbrado_publico', 'total_luz', 'total_agua'
+    ];
+    
+    // Validar que los campos obligatorios no estén vacíos
+    camposObligatorios.forEach(campo => {
+        if (!datos[campo] || datos[campo] === "") {
             esValido = false;
         }
     });
     
-    // Si faltan datos básicos, mostrar mensaje simple
+    // Si faltan datos obligatorios, mostrar mensaje
     if (!esValido) {
-        errores.push("Por favor, complete todos los campos obligatorios");
+        errores.push("Por favor, complete todos los campos obligatorios marcados con *");
     }
     
     // VALIDAR TIPOS NUMÉRICOS Y RANGOS (solo si los campos básicos están completos)
@@ -197,22 +218,22 @@ function validarFormulario() {
             }
         }
         
-        // VALIDAR NÚMEROS POSITIVOS (TODOS LOS CAMPOS NUMÉRICOS)
+        // VALIDAR NÚMEROS NO NEGATIVOS (todos los campos numéricos)
         const todosLosCamposNumericos = [
-            // Personas
+            // Personas (pueden ser 0)
             'personas_piso1', 'personas_departamento2A', 'personas_departamento2B',
             'personas_departamento3A', 'personas_departamento3B',
-            // Medidores (pueden tener decimales)
+            // Medidores (deben ser >= 0)
             'medidor_pasado_departamento2A', 'medidor_pasado_departamento2B',
             'medidor_pasado_departamento3A', 'medidor_pasado_departamento3B',
             'medidor_actual_departamento2A', 'medidor_actual_departamento2B',
             'medidor_actual_departamento3A', 'medidor_actual_departamento3B',
-            // Costos de servicios
+            // Costos de servicios (deben ser >= 0)
             'total_luz', 'total_agua', 'valor_kw', 'alumbrado_publico',
-            // Gas por departamento
+            // Gas por departamento (pueden ser 0)
             'gas_piso1', 'gas_departamento2A', 'gas_departamento2B',
             'gas_departamento3A', 'gas_departamento3B',
-            // Cable e Internet por departamento
+            // Cable e Internet por departamento (pueden ser 0)
             'cabInt_piso1', 'cabInt_departamento2A', 'cabInt_departamento2B',
             'cabInt_departamento3A', 'cabInt_departamento3B'
         ];
@@ -612,13 +633,14 @@ function limpiarFormulario() {
     const mesActual = fechaActual.getMonth() + 1; // getMonth() devuelve 0-11
     const añoActual = fechaActual.getFullYear();
     
-    // PASO 1: Limpiar COMPLETAMENTE localStorage
+    // PASO 1: Limpiar localStorage de campos del formulario (preservar histórico)
     const formFields = document.forms["form_principal"].elements;
     for (let field of formFields) {
         if (field.name) {
             localStorage.removeItem(field.name);
         }
     }
+    // NOTA: NO limpiamos 'historial_cuentas' ni 'casa_calculator_theme'
     
     // PASO 2: Establecer los valores deseados en los campos del formulario
     // Resetear campos con valores por defecto (mes y año actuales)
@@ -715,9 +737,276 @@ function limpiarFormulario() {
 }
 
 /**
+ * =====================================
+ * SISTEMA DE HISTÓRICO DE CÁLCULOS
+ * =====================================
+ */
+
+/**
+ * GUARDAR CÁLCULO EN HISTÓRICO
+ * Guarda un cálculo exitoso en el localStorage para consulta posterior
+ * @param {Object} datosFormulario - Datos completos del formulario
+ * @param {Object} resultados - Resultados calculados por departamento
+ */
+function guardarEnHistorial(datosFormulario, resultados) {
+    try {
+        // Obtener histórico actual
+        let historial = JSON.parse(localStorage.getItem('historial_cuentas') || '[]');
+        
+        // Crear nueva entrada
+        const nuevaEntrada = {
+            id: Date.now(), // Timestamp único
+            mes: parseInt(datosFormulario.calculo_mes),
+            año: parseInt(datosFormulario.calculo_anio),
+            fecha_calculo: new Date().toLocaleString(),
+            datos_formulario: { ...datosFormulario },
+            resultados: { ...resultados }
+        };
+        
+        // Agregar al inicio del array (más reciente primero)
+        historial.unshift(nuevaEntrada);
+        
+        // Mantener solo los últimos 50 cálculos
+        if (historial.length > 50) {
+            historial = historial.slice(0, 50);
+        }
+        
+        // Guardar en localStorage
+        localStorage.setItem('historial_cuentas', JSON.stringify(historial));
+        
+        // Actualizar la visualización del histórico si está visible
+        mostrarHistorial();
+        
+    } catch (error) {
+        console.error('Error al guardar en histórico:', error);
+    }
+}
+
+/**
+ * CARGAR HISTÓRICO DESDE LOCALSTORAGE
+ * @returns {Array} Array con el histórico de cálculos
+ */
+function cargarHistorial() {
+    try {
+        return JSON.parse(localStorage.getItem('historial_cuentas') || '[]');
+    } catch (error) {
+        console.error('Error al cargar histórico:', error);
+        return [];
+    }
+}
+
+/**
+ * MOSTRAR HISTÓRICO EN LA INTERFAZ
+ * Actualiza la tabla del histórico con los datos guardados
+ */
+function mostrarHistorial() {
+    const historial = cargarHistorial();
+    const seccionHistorial = document.getElementById('seccion_historial');
+    const tablaHistorial = document.getElementById('tabla_historial_body');
+    
+    if (historial.length === 0) {
+        // Ocultar sección si no hay histórico
+        seccionHistorial.style.display = 'none';
+        return;
+    }
+    
+    // Mostrar sección
+    seccionHistorial.style.display = 'block';
+    
+    // Limpiar tabla
+    tablaHistorial.innerHTML = '';
+    
+    // Llenar tabla con datos del histórico
+    historial.forEach(entrada => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+            <td>${getNombreMes(entrada.mes)} ${entrada.año}</td>
+            <td>${entrada.fecha_calculo}</td>
+            <td>
+                <button onclick="verDetallesCalculo(${entrada.id})" style="margin-right: 0.5rem;" title="Ver detalles">
+                    <i class="fa-solid fa-eye"></i>
+                </button>
+                <button onclick="cargarCalculoAnterior(${entrada.id})" style="margin-right: 0.5rem;" title="Cargar al formulario">
+                    <i class="fa-solid fa-upload"></i>
+                </button>
+                <button onclick="eliminarDelHistorial(${entrada.id})" class="secondary" title="Eliminar">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </td>
+        `;
+        tablaHistorial.appendChild(fila);
+    });
+}
+
+/**
+ * CARGAR CÁLCULO ANTERIOR AL FORMULARIO
+ * Restaura todos los campos del formulario con datos de un cálculo previo
+ * @param {number} id - ID del cálculo a cargar
+ */
+function cargarCalculoAnterior(id) {
+    const historial = cargarHistorial();
+    const entrada = historial.find(item => item.id === id);
+    
+    if (!entrada) {
+        alert('Error: No se pudo encontrar el cálculo seleccionado.');
+        return;
+    }
+    
+    if (!confirm(`¿Cargar los datos del cálculo de ${getNombreMes(entrada.mes)} ${entrada.año}? Los datos actuales se sobrescribirán.`)) {
+        return;
+    }
+    
+    // Cargar datos al formulario
+    const datos = entrada.datos_formulario;
+    
+    // Mes y año
+    document.getElementById('calculo_mes').value = datos.calculo_mes;
+    document.getElementById('calculo_anio').value = datos.calculo_anio;
+    
+    // Personas
+    document.getElementById('personas_piso1').value = datos.personas_piso1 || '';
+    document.getElementById('personas_departamento2A').value = datos.personas_departamento2A || '';
+    document.getElementById('personas_departamento2B').value = datos.personas_departamento2B || '';
+    document.getElementById('personas_departamento3A').value = datos.personas_departamento3A || '';
+    document.getElementById('personas_departamento3B').value = datos.personas_departamento3B || '';
+    
+    // Medidores anteriores
+    document.getElementById('medidor_pasado_departamento2A').value = datos.medidor_pasado_departamento2A || '';
+    document.getElementById('medidor_pasado_departamento2B').value = datos.medidor_pasado_departamento2B || '';
+    document.getElementById('medidor_pasado_departamento3A').value = datos.medidor_pasado_departamento3A || '';
+    document.getElementById('medidor_pasado_departamento3B').value = datos.medidor_pasado_departamento3B || '';
+    
+    // Medidores actuales
+    document.getElementById('medidor_actual_departamento2A').value = datos.medidor_actual_departamento2A || '';
+    document.getElementById('medidor_actual_departamento2B').value = datos.medidor_actual_departamento2B || '';
+    document.getElementById('medidor_actual_departamento3A').value = datos.medidor_actual_departamento3A || '';
+    document.getElementById('medidor_actual_departamento3B').value = datos.medidor_actual_departamento3B || '';
+    
+    // Parámetros de luz
+    document.getElementById('valor_kw').value = datos.valor_kw || '';
+    document.getElementById('alumbrado_publico').value = datos.alumbrado_publico || '';
+    document.getElementById('total_luz').value = datos.total_luz || '';
+    
+    // Agua
+    document.getElementById('total_agua').value = datos.total_agua || '';
+    
+    // Gas
+    document.getElementById('gas_piso1').value = datos.gas_piso1 || '';
+    document.getElementById('gas_departamento2A').value = datos.gas_departamento2A || '';
+    document.getElementById('gas_departamento2B').value = datos.gas_departamento2B || '';
+    document.getElementById('gas_departamento3A').value = datos.gas_departamento3A || '';
+    document.getElementById('gas_departamento3B').value = datos.gas_departamento3B || '';
+    
+    // Cable e internet
+    document.getElementById('cabInt_piso1').value = datos.cabInt_piso1 || '';
+    document.getElementById('cabInt_departamento2A').value = datos.cabInt_departamento2A || '';
+    document.getElementById('cabInt_departamento2B').value = datos.cabInt_departamento2B || '';
+    document.getElementById('cabInt_departamento3A').value = datos.cabInt_departamento3A || '';
+    document.getElementById('cabInt_departamento3B').value = datos.cabInt_departamento3B || '';
+    
+    // Actualizar localStorage con los nuevos valores
+    const formFields = document.forms["form_principal"].elements;
+    for (let field of formFields) {
+        if (field.name && field.value) {
+            localStorage.setItem(field.name, field.value);
+        }
+    }
+    
+    alert(`Datos de ${getNombreMes(entrada.mes)} ${entrada.año} cargados exitosamente.`);
+}
+
+/**
+ * ELIMINAR ENTRADA DEL HISTÓRICO
+ * @param {number} id - ID del cálculo a eliminar
+ */
+function eliminarDelHistorial(id) {
+    const historial = cargarHistorial();
+    const entrada = historial.find(item => item.id === id);
+    
+    if (!entrada) {
+        alert('Error: No se pudo encontrar el cálculo seleccionado.');
+        return;
+    }
+    
+    if (!confirm(`¿Eliminar el cálculo de ${getNombreMes(entrada.mes)} ${entrada.año} del histórico?`)) {
+        return;
+    }
+    
+    // Filtrar el histórico para remover la entrada
+    const nuevoHistorial = historial.filter(item => item.id !== id);
+    
+    // Guardar el histórico actualizado
+    localStorage.setItem('historial_cuentas', JSON.stringify(nuevoHistorial));
+    
+    // Actualizar la visualización
+    mostrarHistorial();
+    
+    alert('Cálculo eliminado del histórico.');
+}
+
+/**
+ * VER DETALLES DE UN CÁLCULO ANTERIOR
+ * Muestra un modal con toda la información de un cálculo previo
+ * @param {number} id - ID del cálculo a mostrar
+ */
+function verDetallesCalculo(id) {
+    const historial = cargarHistorial();
+    const entrada = historial.find(item => item.id === id);
+    
+    if (!entrada) {
+        alert('Error: No se pudo encontrar el cálculo seleccionado.');
+        return;
+    }
+    
+    // Calcular totales
+    const totalGas = (
+        parseFloat(entrada.datos_formulario.gas_piso1 || 0) +
+        parseFloat(entrada.datos_formulario.gas_departamento2A || 0) +
+        parseFloat(entrada.datos_formulario.gas_departamento2B || 0) +
+        parseFloat(entrada.datos_formulario.gas_departamento3A || 0) +
+        parseFloat(entrada.datos_formulario.gas_departamento3B || 0)
+    ).toFixed(2);
+    
+    const totalCableInternet = (
+        parseFloat(entrada.datos_formulario.cabInt_piso1 || 0) +
+        parseFloat(entrada.datos_formulario.cabInt_departamento2A || 0) +
+        parseFloat(entrada.datos_formulario.cabInt_departamento2B || 0) +
+        parseFloat(entrada.datos_formulario.cabInt_departamento3A || 0) +
+        parseFloat(entrada.datos_formulario.cabInt_departamento3B || 0)
+    ).toFixed(2);
+    
+    // Preparar contenido del modal
+    let contenido = `
+        <h4>${getNombreMes(entrada.mes)} ${entrada.año}</h4>
+        <p><strong>Calculado el:</strong> ${entrada.fecha_calculo}</p>
+        
+        <h5>Datos del Formulario:</h5>
+        <table style="width: 100%; font-size: 0.9rem;">
+            <tr><td><strong>Personas Piso 1:</strong></td><td>${entrada.datos_formulario.personas_piso1}</td></tr>
+            <tr><td><strong>Personas Depto 2A:</strong></td><td>${entrada.datos_formulario.personas_departamento2A}</td></tr>
+            <tr><td><strong>Personas Depto 2B:</strong></td><td>${entrada.datos_formulario.personas_departamento2B}</td></tr>
+            <tr><td><strong>Personas Depto 3A:</strong></td><td>${entrada.datos_formulario.personas_departamento3A}</td></tr>
+            <tr><td><strong>Personas Depto 3B:</strong></td><td>${entrada.datos_formulario.personas_departamento3B}</td></tr>
+            <tr><td><strong>Total Luz:</strong></td><td>S/${entrada.datos_formulario.total_luz}</td></tr>
+            <tr><td><strong>Total Agua:</strong></td><td>S/${entrada.datos_formulario.total_agua}</td></tr>
+            <tr><td><strong>Total Gas:</strong></td><td>S/${totalGas}</td></tr>
+            <tr><td><strong>Total Cable/Internet:</strong></td><td>S/${totalCableInternet}</td></tr>
+        </table>
+    `;
+    
+    // Mostrar en el modal de detalles
+    document.getElementById('modal_detalles_content').innerHTML = contenido;
+    
+    // Abrir el modal directamente usando las funciones del modal.js
+    const modal = document.getElementById('modal_detalles_historial');
+    openModal(modal);
+}
+
+/**
  * INICIALIZACIÓN AL CARGAR LA PÁGINA
  * Restaura automáticamente todos los valores guardados del formulario
  * y aplica el tema guardado por el usuario
  */
 getCacheValues();
 cargarTemaGuardado();
+mostrarHistorial(); // Cargar histórico al iniciar

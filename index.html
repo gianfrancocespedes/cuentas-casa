@@ -42,7 +42,7 @@
                 </header>
                 <div class="grid">
                     <div>
-                        <label for="calculo_mes">Mes</label>
+                        <label for="calculo_mes">Mes *</label>
                         <select id="calculo_mes" name="calculo_mes">
                             <option value="1" selected>Enero</option>
                             <option value="2">Febrero</option>
@@ -59,7 +59,7 @@
                         </select>
                     </div>
                     <div>
-                        <label for="calculo_anio">Año</label>
+                        <label for="calculo_anio">Año *</label>
                         <input type="number" id="calculo_anio" name="calculo_anio" placeholder="2025">
                     </div>
                 </div>
@@ -109,25 +109,25 @@
                     <div>
                         <h4><i class="fa-solid fa-gauge-simple"></i> Medidor (mes pasado)</h4>
                         <small style="display: block; margin-bottom: var(--pico-spacing);"><i class="fa-solid fa-info-circle"></i> Lecturas del medidor del período anterior</small>
-                        <label for="medidor_pasado_departamento2A">Departamento 2A</label>
+                        <label for="medidor_pasado_departamento2A">Departamento 2A *</label>
                         <input type="number" step="0.01" id="medidor_pasado_departamento2A" name="medidor_pasado_departamento2A" placeholder="0.00">
-                        <label for="medidor_pasado_departamento2B">Departamento 2B</label>
+                        <label for="medidor_pasado_departamento2B">Departamento 2B *</label>
                         <input type="number" step="0.01" id="medidor_pasado_departamento2B" name="medidor_pasado_departamento2B" placeholder="0.00">
-                        <label for="medidor_pasado_departamento3A">Departamento 3A</label>
+                        <label for="medidor_pasado_departamento3A">Departamento 3A *</label>
                         <input type="number" step="0.01" id="medidor_pasado_departamento3A" name="medidor_pasado_departamento3A" placeholder="0.00">
-                        <label for="medidor_pasado_departamento3B">Departamento 3B</label>
+                        <label for="medidor_pasado_departamento3B">Departamento 3B *</label>
                         <input type="number" step="0.01" id="medidor_pasado_departamento3B" name="medidor_pasado_departamento3B" placeholder="0.00">
                     </div>
                     <div>
                         <h4><i class="fa-solid fa-gauge"></i> Medidor (mes actual)</h4>
                         <small style="display: block; margin-bottom: var(--pico-spacing);"><i class="fa-solid fa-info-circle"></i> Lecturas actuales del medidor de cada departamento</small>
-                        <label for="medidor_actual_departamento2A">Departamento 2A</label>
+                        <label for="medidor_actual_departamento2A">Departamento 2A *</label>
                         <input type="number" step="0.01" id="medidor_actual_departamento2A" name="medidor_actual_departamento2A" placeholder="0.00">
-                        <label for="medidor_actual_departamento2B">Departamento 2B</label>
+                        <label for="medidor_actual_departamento2B">Departamento 2B *</label>
                         <input type="number" step="0.01" id="medidor_actual_departamento2B" name="medidor_actual_departamento2B" placeholder="0.00">
-                        <label for="medidor_actual_departamento3A">Departamento 3A</label>
+                        <label for="medidor_actual_departamento3A">Departamento 3A *</label>
                         <input type="number" step="0.01" id="medidor_actual_departamento3A" name="medidor_actual_departamento3A" placeholder="0.00">
-                        <label for="medidor_actual_departamento3B">Departamento 3B</label>
+                        <label for="medidor_actual_departamento3B">Departamento 3B *</label>
                         <input type="number" step="0.01" id="medidor_actual_departamento3B" name="medidor_actual_departamento3B" placeholder="0.00">
                     </div>
                 </div>
@@ -135,18 +135,18 @@
                 <!-- Parámetros de cálculo de luz -->
                 <div class="grid">
                     <div>
-                        <label for="valor_kw"><i class="fa-solid fa-bolt"></i> Valor de KW</label>
+                        <label for="valor_kw"><i class="fa-solid fa-bolt"></i> Valor de KW *</label>
                         <input type="number" step="0.0001" id="valor_kw" name="valor_kw" placeholder="0.0000">
                         <small><i class="fa-solid fa-info-circle"></i> Precio por kilowatt-hora que aparece en el recibo de luz</small>
                     </div>
                     <div>
-                        <label for="alumbrado_publico"><i class="fa-solid fa-street-view"></i> Alumbrado público</label>
+                        <label for="alumbrado_publico"><i class="fa-solid fa-street-view"></i> Alumbrado público *</label>
                         <input type="number" step="0.01" id="alumbrado_publico" name="alumbrado_publico" placeholder="0.00">
                         <small><i class="fa-solid fa-info-circle"></i> Cargo fijo por alumbrado público del recibo</small>
                     </div>
                 </div>
                 
-                <label for="total_luz"><i class="fa-solid fa-receipt"></i> Total de Luz (recibo)</label>
+                <label for="total_luz"><i class="fa-solid fa-receipt"></i> Total de Luz (recibo) *</label>
                 <input type="number" step="0.01" id="total_luz" name="total_luz" placeholder="0.00">
                 <small><i class="fa-solid fa-info-circle"></i> Monto total a pagar que aparece en el recibo de luz</small>
             </article>
@@ -155,7 +155,7 @@
                 <header>
                     <h3><i class="fa-solid fa-droplet"></i> Agua</h3>
                 </header>
-                <label for="total_agua"><i class="fa-solid fa-receipt"></i> Total Agua (recibo)</label>
+                <label for="total_agua"><i class="fa-solid fa-receipt"></i> Total Agua (recibo) *</label>
                 <input type="number" step="0.01" id="total_agua" name="total_agua" placeholder="0.00">
                 <small><i class="fa-solid fa-info-circle"></i> Monto total del recibo de agua. Se divide proporcionalmente según el número de personas por departamento</small>
             </article>
@@ -234,6 +234,30 @@
                 </button>
             </article>
         </form>
+        
+        <!-- Sección de Histórico -->
+        <section id="seccion_historial" style="display: none;">
+            <article>
+                <header>
+                    <h3><i class="fa-solid fa-clock-rotate-left"></i> Histórico de Cálculos</h3>
+                </header>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Período</th>
+                                <th>Fecha de Cálculo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla_historial_body">
+                            <!-- Las filas se llenan dinámicamente con JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+        
         <hr id="linea" style="visibility: hidden;">
         <section id="descargas" style="visibility: hidden;">
             <h3 id="fecha_hora_calculo"></h3>
@@ -404,6 +428,25 @@
         </article>
     </dialog>
     <!-- Modal Departamento 3B -->
+
+    <!-- Modal para Detalles del Histórico -->
+    <dialog id="modal_detalles_historial">
+        <article>
+            <header>
+                <a href="#close" aria-label="Close" class="close" data-target="modal_detalles_historial" onclick="toggleModal(event)"></a>
+                <h4>Detalles del Cálculo</h4>
+            </header>
+            <div id="modal_detalles_content">
+                <!-- El contenido se carga dinámicamente -->
+            </div>
+            <footer>
+                <a href="#" role="button" class="secondary" data-target="modal_detalles_historial" onclick="toggleModal(event)">
+                    Cerrar
+                </a>
+            </footer>
+        </article>
+    </dialog>
+    <!-- Modal para Detalles del Histórico -->
 
 
     <!-- Código JavaScript -->
