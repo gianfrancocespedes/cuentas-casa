@@ -189,6 +189,115 @@ function limpiarFormulario() {
 }
 
 /**
+ * Función para preparar un nuevo cálculo
+ * Similar a limpiarFormulario pero toma los valores del mes actual como base para el mes pasado
+ */
+function nuevoCalculo() {
+    if (!confirm('¿Estás seguro de que deseas preparar un nuevo cálculo? Los valores del medidor actual pasarán a ser los del mes pasado.')) {
+        return;
+    }
+    
+    const fechaActual = new Date();
+    const mesActual = fechaActual.getMonth() + 1;
+    const añoActual = fechaActual.getFullYear();
+    
+    // Obtener valores actuales de los medidores del mes actual y personas
+    const valoresActuales = {
+        departamento2A: getInputValue('medidor_actual_departamento2A'),
+        departamento2B: getInputValue('medidor_actual_departamento2B'),
+        departamento3A: getInputValue('medidor_actual_departamento3A'),
+        departamento3B: getInputValue('medidor_actual_departamento3B')
+    };
+    
+    const valoresPersonas = {
+        piso1: getInputValue('personas_piso1'),
+        departamento2A: getInputValue('personas_departamento2A'),
+        departamento2B: getInputValue('personas_departamento2B'),
+        departamento3A: getInputValue('personas_departamento3A'),
+        departamento3B: getInputValue('personas_departamento3B')
+    };
+    
+    // Limpiar localStorage de campos del formulario (preservar histórico)
+    const formulario = document.forms["form_principal"];
+    if (formulario) {
+        const formFields = formulario.elements;
+        for (let field of formFields) {
+            if (field.name) {
+                removeFromStorage(field.name);
+            }
+        }
+    }
+    
+    // Establecer valores básicos
+    setInputValue('calculo_mes', mesActual);
+    setInputValue('calculo_anio', añoActual);
+    
+    // Mantener valores de personas
+    setInputValue('personas_piso1', valoresPersonas.piso1);
+    setInputValue('personas_departamento2A', valoresPersonas.departamento2A);
+    setInputValue('personas_departamento2B', valoresPersonas.departamento2B);
+    setInputValue('personas_departamento3A', valoresPersonas.departamento3A);
+    setInputValue('personas_departamento3B', valoresPersonas.departamento3B);
+    
+    // Establecer medidores del mes pasado con los valores actuales anteriores
+    setInputValue('medidor_pasado_departamento2A', valoresActuales.departamento2A);
+    setInputValue('medidor_pasado_departamento2B', valoresActuales.departamento2B);
+    setInputValue('medidor_pasado_departamento3A', valoresActuales.departamento3A);
+    setInputValue('medidor_pasado_departamento3B', valoresActuales.departamento3B);
+    
+    // Resetear medidores actuales a 0
+    const camposMedidoresActuales = ['medidor_actual_departamento2A', 'medidor_actual_departamento2B',
+                                    'medidor_actual_departamento3A', 'medidor_actual_departamento3B'];
+    camposMedidoresActuales.forEach(campo => setInputValue(campo, '0'));
+    
+    // Resetear valores de servicios a 0
+    const camposServicios = ['valor_kw', 'alumbrado_publico', 'total_luz', 'total_agua'];
+    camposServicios.forEach(campo => setInputValue(campo, '0'));
+    
+    // Resetear gas a 0
+    const camposGas = ['gas_piso1', 'gas_departamento2A', 'gas_departamento2B',
+                       'gas_departamento3A', 'gas_departamento3B'];
+    camposGas.forEach(campo => setInputValue(campo, '0'));
+    
+    // Resetear cable e internet a 0
+    const camposCableInt = ['cabInt_piso1', 'cabInt_departamento2A', 'cabInt_departamento2B',
+                           'cabInt_departamento3A', 'cabInt_departamento3B'];
+    camposCableInt.forEach(campo => setInputValue(campo, '0'));
+    
+    // Guardar en localStorage
+    saveToStorage('calculo_mes', mesActual);
+    saveToStorage('calculo_anio', añoActual);
+    
+    // Guardar medidores del mes pasado
+    saveToStorage('medidor_pasado_departamento2A', valoresActuales.departamento2A);
+    saveToStorage('medidor_pasado_departamento2B', valoresActuales.departamento2B);
+    saveToStorage('medidor_pasado_departamento3A', valoresActuales.departamento3A);
+    saveToStorage('medidor_pasado_departamento3B', valoresActuales.departamento3B);
+    
+    // Guardar valores de personas
+    saveToStorage('personas_piso1', valoresPersonas.piso1);
+    saveToStorage('personas_departamento2A', valoresPersonas.departamento2A);
+    saveToStorage('personas_departamento2B', valoresPersonas.departamento2B);
+    saveToStorage('personas_departamento3A', valoresPersonas.departamento3A);
+    saveToStorage('personas_departamento3B', valoresPersonas.departamento3B);
+    
+    // Guardar campos en 0
+    [...camposMedidoresActuales, ...camposServicios, ...camposGas, ...camposCableInt]
+        .forEach(campo => saveToStorage(campo, '0'));
+    
+    // Ocultar sección de resultados si estaba visible
+    if (visible) {
+        setElementVisibility(getElementById("descargas"), false);  
+        setElementVisibility(getElementById("linea"), false);
+        visible = false;
+    }
+    
+    limpiarMensajesError();
+    
+    alert('Nuevo cálculo preparado exitosamente. Los medidores del mes pasado se han actualizado con los valores anteriores.');
+}
+
+/**
  * INICIALIZACIÓN DE LA APLICACIÓN
  * Función principal que se ejecuta cuando se carga la página
  */
