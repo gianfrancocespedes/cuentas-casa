@@ -1,21 +1,36 @@
-MIT License
+Dual License Agreement
 
 Copyright (c) 2023 Gianfranco Céspedes
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This software and associated documentation files (the "Software") are provided under a dual licensing model:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+## NON-COMMERCIAL LICENSE
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Permission is hereby granted, free of charge, to any person obtaining a copy of this Software, to use, copy, modify, merge, and distribute the Software for personal, educational, or non-commercial purposes, subject to the following conditions:
+
+1. The above copyright notice and this license notice shall be included in all copies or substantial portions of the Software.
+
+2. Any modifications to the Software must be clearly documented and the copyright holder must be notified of such modifications via email or other reasonable means.
+
+3. The Software may not be used for commercial purposes without obtaining a separate commercial license.
+
+## COMMERCIAL LICENSE
+
+For any commercial use, including but not limited to:
+- Use in commercial products or services
+- Distribution for profit
+- Integration into commercial software
+- Use by commercial entities
+
+A separate commercial license must be obtained from the copyright holder. Commercial licensing options include:
+- One-time licensing fee
+- Revenue sharing agreement (percentage of gross revenue derived from the Software)
+- Custom licensing terms
+
+To obtain a commercial license, contact the copyright holder at the email address associated with this repository.
+
+## GENERAL TERMS
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+For questions regarding licensing terms or to report modifications, please contact: Gianfranco Céspedes

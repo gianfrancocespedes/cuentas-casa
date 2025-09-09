@@ -5,6 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cuentas de la casa</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Calculadora de servicios públicos para dividir gastos entre apartamentos">
+    <meta name="theme-color" content="#1976d2">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Cuentas Casa">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/x-icon" href="./icons/favicon.ico">
+    <link rel="shortcut icon" href="./icons/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-apple-touch.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json">
+    
     <!-- Librerías de CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
     <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.1.2/css/all.css">
@@ -19,7 +37,7 @@
     <main class="container">
         <div style="text-align: right; margin-bottom: var(--pico-spacing);">
             <button onclick="abrirModalImportExport()" style="margin-right: var(--pico-spacing);"><i class="fa-solid fa-file-import"></i>&nbsp;&nbsp;Importar/Exportar Datos</button>
-            <button onclick="nuevoCalculo()" style="margin-right: var(--pico-spacing);"><i class="fa-solid fa-rotate"></i>&nbsp;&nbsp;Nuevo Cálculo</button>
+            <button onclick="nuevoCalculo()" style="margin-right: var(--pico-spacing);"><i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Nuevo Cálculo</button>
             <button onclick="limpiarFormulario()" style="margin-right: var(--pico-spacing);"><i class="fa-solid fa-eraser"></i>&nbsp;&nbsp;Limpiar Datos</button>
             <button onclick="cambiarTema()" id="boton_tema"><i class='fa-solid fa-brightness'></i>&nbsp;&nbsp;Cambiar Tema</button>
         </div>
@@ -342,6 +360,29 @@
             </article>
         </section>
     </main>
+    
+    <!-- Footer -->
+    <footer class="container" style="text-align: center; margin-top: 2rem; padding: var(--pico-spacing) 0; border-top: 1px solid var(--pico-muted-border-color);">
+        <small>
+            Hecho con ❤️ por <a href="https://github.com/gianfrancocespedes" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">Gianfranco Céspedes</a>
+        </small>
+        <br>
+        <small>
+            <a href="docs.html" style="color: var(--pico-primary); text-decoration: none; margin-right: 1rem;">
+                <i class="fa-solid fa-book" style="font-size: 0.8em;"></i> Manual de usuario
+            </a>
+            <a href="mailto:gianmcf2@gmail.com" style="color: var(--pico-primary); text-decoration: none; margin-right: 1rem;">
+                <i class="fa-solid fa-envelope" style="font-size: 0.8em;"></i> Contacto
+            </a>
+            <a id="link_instalar_pwa" href="#" style="display: none; color: var(--pico-primary); text-decoration: none; cursor: pointer; margin-right: 1rem;">
+                <i class="fa-solid fa-download" style="font-size: 0.8em;"></i> Instalar app
+            </a>
+            <span style="color: var(--pico-muted-color);">
+                <i class="fa-solid fa-code-branch" style="font-size: 0.8em;"></i> v3.0.0
+            </span>
+        </small>
+    </footer>
+    
     <!-- Modal Piso 1 -->
     <dialog id="modal_piso1">
         <article>
@@ -520,7 +561,40 @@
     <!-- UI -->
     <script src="js/ui/modal.js"></script>
 
+    <!-- PWA Service Worker -->
+    <script src="js/features/pwa.js"></script>
+    
     <!-- Inicialización al final -->
     <script src="js/core/app.js"></script>
+    
+    <!-- Registro del Service Worker -->
+    <script>
+        // Registro del Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((registration) => {
+                        console.log('[App] Service Worker registrado correctamente:', registration.scope);
+                        
+                        // Escucha actualizaciones del SW
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // Hay una nueva versión disponible
+                                    console.log('[App] Nueva versión de la aplicación disponible');
+                                    // Aquí podrías mostrar un mensaje al usuario
+                                }
+                            });
+                        });
+                    })
+                    .catch((error) => {
+                        console.log('[App] Error al registrar Service Worker:', error);
+                    });
+            });
+        } else {
+            console.log('[App] Service Worker no es compatible con este navegador');
+        }
+    </script>
 </body>
 </html>

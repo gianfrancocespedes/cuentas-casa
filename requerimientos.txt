@@ -1,6 +1,0 @@
-Pendientes:
-- Agregar un Select para seleccionar el mes de las cuentas y el año, así estos datos aparecen en título del PDF al descargar.
-
-
-Hechos:
-- 
