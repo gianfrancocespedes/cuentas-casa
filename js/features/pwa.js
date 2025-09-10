@@ -146,6 +146,41 @@ if (esAppInstalada()) {
     // Por ejemplo: ocultar la barra de navegación del navegador visualmente
 }
 
+// SERVICE WORKER REGISTRATION
+// Registro del Service Worker para PWA (con protección contra registros múltiples)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        // Verificar si ya hay un Service Worker registrado para evitar registros duplicados
+        navigator.serviceWorker.getRegistration('./sw.js').then((existingRegistration) => {
+            if (existingRegistration) {
+                console.log('[App] Service Worker ya está registrado:', existingRegistration.scope);
+                return existingRegistration;
+            } else {
+                // Solo registrar si no existe uno previo
+                return navigator.serviceWorker.register('./sw.js');
+            }
+        }).then((registration) => {
+            console.log('[App] Service Worker registrado correctamente:', registration.scope);
+            
+            // Escucha actualizaciones del SW
+            registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        // Hay una nueva versión disponible
+                        console.log('[App] Nueva versión de la aplicación disponible');
+                        // Aquí podrías mostrar un mensaje al usuario
+                    }
+                });
+            });
+        }).catch((error) => {
+            console.log('[App] Error al registrar Service Worker:', error);
+        });
+    });
+} else {
+    console.log('[App] Service Worker no es compatible con este navegador');
+}
+
 // Maneja la conectividad de red para apps PWA
 window.addEventListener('online', () => {
     console.log('[PWA] Conexión a internet restaurada');

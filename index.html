@@ -396,7 +396,7 @@
                 <a href="#" role="button" class="secondary" data-target="modal_piso1" onClick="toggleModal(event)">
                     Cerrar
                 </a>
-                <a href="#" role="button" data-target="modal_piso1" onClick="descargarPiso1();toggleModal(event);">
+                <a href="#" role="button" data-target="modal_piso1" onClick="descargarPDF('1');toggleModal(event);">
                     Descargar PDF
                 </a>
             </footer>
@@ -567,34 +567,6 @@
     <!-- Inicialización al final -->
     <script src="js/core/app.js"></script>
     
-    <!-- Registro del Service Worker -->
-    <script>
-        // Registro del Service Worker para PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then((registration) => {
-                        console.log('[App] Service Worker registrado correctamente:', registration.scope);
-                        
-                        // Escucha actualizaciones del SW
-                        registration.addEventListener('updatefound', () => {
-                            const newWorker = registration.installing;
-                            newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    // Hay una nueva versión disponible
-                                    console.log('[App] Nueva versión de la aplicación disponible');
-                                    // Aquí podrías mostrar un mensaje al usuario
-                                }
-                            });
-                        });
-                    })
-                    .catch((error) => {
-                        console.log('[App] Error al registrar Service Worker:', error);
-                    });
-            });
-        } else {
-            console.log('[App] Service Worker no es compatible con este navegador');
-        }
-    </script>
+    <!-- Service Worker registration now handled by js/features/pwa.js -->
 </body>
 </html>
