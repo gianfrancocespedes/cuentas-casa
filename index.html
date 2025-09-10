@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" id="webPage" data-theme="dark">
+<html lang="es" id="webPage" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,47 +23,169 @@
     <!-- PWA Manifest -->
     <link rel="manifest" href="./manifest.json">
     
-    <!-- Librerías de CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.1.2/css/all.css">
-    <!-- Librerías de JavaScript -->
+    
+    <!-- JavaScript Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
     
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand': {
+                            50: '#e3f2fd',
+                            100: '#bbdefb',
+                            500: '#2196f3',
+                            600: '#1976d2',
+                            700: '#1565c0',
+                            900: '#0d47a1'
+                        }
+                    },
+                    animation: {
+                        'fade-up': 'fadeUp 0.6s ease-out',
+                        'fade-in': 'fadeIn 0.8s ease-out',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #1976d2 0%, #2196f3 50%, #1565c0 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .dark .gradient-text {
+            background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 50%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .dark .glass {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Simple solution: Always show scrollbar to prevent layout shift */
+        html {
+            overflow-y: scroll; /* Always reserve scrollbar space */
+        }
+        
+        .modal-open {
+            overflow-y: hidden; /* Disable scrolling but keep scrollbar space */
+        }
+    </style>
 </head>
-<body>
-    <header class="container">
-        <h1><i class="fa-solid fa-file-invoice-dollar"></i>&nbsp;&nbsp;Cuentas de la casa&nbsp;&nbsp;<i class="fa-solid fa-house"></i></h1>
-    </header>
-    <main class="container">
-        <div style="text-align: right; margin-bottom: var(--pico-spacing);">
-            <button onclick="abrirModalImportExport()" style="margin-right: var(--pico-spacing);"><i class="fa-solid fa-file-import"></i>&nbsp;&nbsp;Importar/Exportar Datos</button>
-            <button onclick="nuevoCalculo()" style="margin-right: var(--pico-spacing);"><i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Nuevo Cálculo</button>
-            <button onclick="limpiarFormulario()" style="margin-right: var(--pico-spacing);"><i class="fa-solid fa-eraser"></i>&nbsp;&nbsp;Limpiar Datos</button>
-            <button onclick="cambiarTema()" id="boton_tema"><i class='fa-solid fa-brightness'></i>&nbsp;&nbsp;Cambiar Tema</button>
+
+<body class="font-inter bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 transition-all duration-500">
+    <!-- Fixed Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-gradient-to-br from-brand-600 to-brand-700 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-house text-white text-sm"></i>
+                    </div>
+                    <h1 class="font-bold text-xl gradient-text">Cuentas de la casa</h1>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                    <button onclick="abrirModalImportExport()" class="hidden sm:flex items-center px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                        <i class="fa-solid fa-file-import mr-2"></i>
+                        Importar/Exportar
+                    </button>
+                    <button onclick="nuevoCalculo()" class="hidden sm:flex items-center px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                        <i class="fa-solid fa-plus mr-2"></i>
+                        Nuevo
+                    </button>
+                    <button onclick="limpiarFormulario()" class="hidden sm:flex items-center px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                        <i class="fa-solid fa-eraser mr-2"></i>
+                        Limpiar
+                    </button>
+                    <button onclick="cambiarTema()" id="boton_tema" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        <i class="fa-solid fa-brightness text-slate-600 dark:text-slate-400"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-20 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <!-- Mobile Action Buttons -->
+        <div class="flex flex-wrap gap-2 sm:hidden mb-6">
+            <button onclick="abrirModalImportExport()" class="flex-1 flex items-center justify-center px-3 py-2 text-sm font-medium bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                <i class="fa-solid fa-file-import mr-2"></i>
+                Importar
+            </button>
+            <button onclick="nuevoCalculo()" class="flex-1 flex items-center justify-center px-3 py-2 text-sm font-medium bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                <i class="fa-solid fa-plus mr-2"></i>
+                Nuevo
+            </button>
+            <button onclick="limpiarFormulario()" class="flex-1 flex items-center justify-center px-3 py-2 text-sm font-medium bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                <i class="fa-solid fa-eraser mr-2"></i>
+                Limpiar
+            </button>
         </div>
         
-        <!-- Área para mensajes de error -->
-        <div id="error_messages" style="display: none;">
-            <article style="background: var(--pico-color-red-50); border-left: 4px solid var(--pico-color-red-500);">
-                <header>
-                    <h4 style="color: var(--pico-color-red-700); margin: 0;">
-                        <i class="fa-solid fa-triangle-exclamation"></i> Errores Encontrados
-                    </h4>
-                </header>
-                <div id="error_list"></div>
-            </article>
+        <!-- Error Messages -->
+        <div id="error_messages" class="hidden mb-6">
+            <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
+                <div class="flex items-center mb-3">
+                    <i class="fa-solid fa-triangle-exclamation text-red-600 dark:text-red-400 mr-2"></i>
+                    <h4 class="text-red-800 dark:text-red-300 font-semibold">Errores Encontrados</h4>
+                </div>
+                <div id="error_list" class="text-red-700 dark:text-red-300"></div>
+            </div>
         </div>
 
-        <form id='form_principal'>
-            <!-- Tarjeta: Fecha del Cálculo -->
-            <article>
-                <header>
-                    <h3><i class="fa-solid fa-calendar-days"></i> Mes y año</h3>
-                </header>
-                <div class="grid">
+        <form id="form_principal" class="space-y-8">
+            <!-- Date Section -->
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+                <div class="flex items-center mb-6">
+                    <div class="w-10 h-10 bg-gradient-to-br from-brand-100 to-brand-200 dark:from-slate-700 dark:to-slate-600 border border-brand-300 dark:border-slate-500 rounded-xl flex items-center justify-center mr-4">
+                        <i class="fa-solid fa-calendar-days text-brand-600 dark:text-slate-100"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold">Mes y año</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
-                        <label for="calculo_mes">Mes *</label>
-                        <select id="calculo_mes" name="calculo_mes">
+                        <label for="calculo_mes" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Mes *</label>
+                        <select id="calculo_mes" name="calculo_mes" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
                             <option value="1" selected>Enero</option>
                             <option value="2">Febrero</option>
                             <option value="3">Marzo</option>
@@ -79,470 +201,560 @@
                         </select>
                     </div>
                     <div>
-                        <label for="calculo_anio">Año *</label>
-                        <input type="number" id="calculo_anio" name="calculo_anio" placeholder="2025">
+                        <label for="calculo_anio" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Año *</label>
+                        <input type="number" id="calculo_anio" name="calculo_anio" placeholder="2025" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
                     </div>
                 </div>
-            </article>
-            <!-- Tarjeta: Personas por Departamento -->
-            <article>
-                <header>
-                    <h3><i class="fa-solid fa-users"></i> Cantidad total de personas</h3>
-                    <small><i class="fa-solid fa-info-circle"></i> Número de residentes por departamento. Se usa en todos los cálculos de distribución de costos</small>
-                </header>
-                <div class="grid">
-                    <div>
-                        <label for="personas_piso1">Primer piso</label>
-                        <input type="number" id="personas_piso1" name="personas_piso1" placeholder="0">
+            </div>
+
+            <!-- People Section -->
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+                <div class="flex items-start mb-6">
+                    <div class="w-10 h-10 bg-gradient-to-br from-brand-100 to-brand-200 dark:from-slate-700 dark:to-slate-600 border border-brand-300 dark:border-slate-500 rounded-xl flex items-center justify-center mr-4 mt-1">
+                        <i class="fa-solid fa-users text-brand-600 dark:text-slate-100"></i>
                     </div>
                     <div>
-                        <label for="personas_departamento2A">Departamento 2A</label>
-                        <input type="number" id="personas_departamento2A" name="personas_departamento2A" placeholder="0">
+                        <h3 class="text-xl font-semibold mb-2">Cantidad total de personas</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-400">Número de residentes por departamento. Se usa en todos los cálculos de distribución de costos</p>
                     </div>
                 </div>
-                <div class="grid">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div>
-                        <label for="personas_departamento2B">Departamento 2B</label>
-                        <input type="number" id="personas_departamento2B" name="personas_departamento2B" placeholder="0">
+                        <label for="personas_piso1" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Primer piso</label>
+                        <input type="number" id="personas_piso1" name="personas_piso1" placeholder="0" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
                     </div>
                     <div>
-                        <label for="personas_departamento3A">Departamento 3A</label>
-                        <input type="number" id="personas_departamento3A" name="personas_departamento3A" placeholder="0">
+                        <label for="personas_departamento2A" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 2A</label>
+                        <input type="number" id="personas_departamento2A" name="personas_departamento2A" placeholder="0" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label for="personas_departamento2B" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 2B</label>
+                        <input type="number" id="personas_departamento2B" name="personas_departamento2B" placeholder="0" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label for="personas_departamento3A" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 3A</label>
+                        <input type="number" id="personas_departamento3A" name="personas_departamento3A" placeholder="0" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label for="personas_departamento3B" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 3B</label>
+                        <input type="number" id="personas_departamento3B" name="personas_departamento3B" placeholder="0" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
                     </div>
                 </div>
-                <div class="grid">
-                    <div>
-                        <label for="personas_departamento3B">Departamento 3B</label>
-                        <input type="number" id="personas_departamento3B" name="personas_departamento3B" placeholder="0">
+            </div>
+
+            <!-- Electricity Section -->
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+                <div class="flex items-center mb-6">
+                    <div class="w-10 h-10 bg-gradient-to-br from-brand-100 to-brand-200 dark:from-slate-700 dark:to-slate-600 border border-brand-300 dark:border-slate-500 rounded-xl flex items-center justify-center mr-4">
+                        <i class="fa-solid fa-lightbulb text-brand-600 dark:text-slate-100"></i>
                     </div>
-                    <div></div>
+                    <h3 class="text-xl font-semibold">Luz</h3>
                 </div>
-            </article>
-            <!-- Tarjeta: Servicio de Luz -->
-            <article>
-                <header>
-                    <h3><i class="fa-solid fa-lightbulb"></i> Luz</h3>
-                </header>
                 
-                <!-- Medidores -->
-                <div class="grid">
+                <!-- Meters -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                     <div>
-                        <h4><i class="fa-solid fa-gauge-simple"></i> Medidor (mes pasado)</h4>
-                        <small style="display: block; margin-bottom: var(--pico-spacing);"><i class="fa-solid fa-info-circle"></i> Lecturas del medidor del período anterior</small>
-                        <label for="medidor_pasado_departamento2A">Departamento 2A *</label>
-                        <input type="number" step="0.01" id="medidor_pasado_departamento2A" name="medidor_pasado_departamento2A" placeholder="0.00">
-                        <label for="medidor_pasado_departamento2B">Departamento 2B *</label>
-                        <input type="number" step="0.01" id="medidor_pasado_departamento2B" name="medidor_pasado_departamento2B" placeholder="0.00">
-                        <label for="medidor_pasado_departamento3A">Departamento 3A *</label>
-                        <input type="number" step="0.01" id="medidor_pasado_departamento3A" name="medidor_pasado_departamento3A" placeholder="0.00">
-                        <label for="medidor_pasado_departamento3B">Departamento 3B *</label>
-                        <input type="number" step="0.01" id="medidor_pasado_departamento3B" name="medidor_pasado_departamento3B" placeholder="0.00">
+                        <div class="flex items-center mb-4">
+                            <i class="fa-solid fa-gauge-simple text-brand-600 dark:text-slate-400 mr-2"></i>
+                            <h4 class="text-lg font-medium">Medidor (mes pasado)</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Lecturas del medidor del período anterior</p>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="medidor_pasado_departamento2A" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 2A *</label>
+                                <input type="number" step="0.01" id="medidor_pasado_departamento2A" name="medidor_pasado_departamento2A" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                            </div>
+                            <div>
+                                <label for="medidor_pasado_departamento2B" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 2B *</label>
+                                <input type="number" step="0.01" id="medidor_pasado_departamento2B" name="medidor_pasado_departamento2B" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                            </div>
+                            <div>
+                                <label for="medidor_pasado_departamento3A" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 3A *</label>
+                                <input type="number" step="0.01" id="medidor_pasado_departamento3A" name="medidor_pasado_departamento3A" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                            </div>
+                            <div>
+                                <label for="medidor_pasado_departamento3B" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 3B *</label>
+                                <input type="number" step="0.01" id="medidor_pasado_departamento3B" name="medidor_pasado_departamento3B" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                            </div>
+                        </div>
                     </div>
                     <div>
-                        <h4><i class="fa-solid fa-gauge"></i> Medidor (mes actual)</h4>
-                        <small style="display: block; margin-bottom: var(--pico-spacing);"><i class="fa-solid fa-info-circle"></i> Lecturas actuales del medidor de cada departamento</small>
-                        <label for="medidor_actual_departamento2A">Departamento 2A *</label>
-                        <input type="number" step="0.01" id="medidor_actual_departamento2A" name="medidor_actual_departamento2A" placeholder="0.00">
-                        <label for="medidor_actual_departamento2B">Departamento 2B *</label>
-                        <input type="number" step="0.01" id="medidor_actual_departamento2B" name="medidor_actual_departamento2B" placeholder="0.00">
-                        <label for="medidor_actual_departamento3A">Departamento 3A *</label>
-                        <input type="number" step="0.01" id="medidor_actual_departamento3A" name="medidor_actual_departamento3A" placeholder="0.00">
-                        <label for="medidor_actual_departamento3B">Departamento 3B *</label>
-                        <input type="number" step="0.01" id="medidor_actual_departamento3B" name="medidor_actual_departamento3B" placeholder="0.00">
+                        <div class="flex items-center mb-4">
+                            <i class="fa-solid fa-gauge text-brand-600 dark:text-slate-400 mr-2"></i>
+                            <h4 class="text-lg font-medium">Medidor (mes actual)</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Lecturas actuales del medidor de cada departamento</p>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="medidor_actual_departamento2A" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 2A *</label>
+                                <input type="number" step="0.01" id="medidor_actual_departamento2A" name="medidor_actual_departamento2A" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                            </div>
+                            <div>
+                                <label for="medidor_actual_departamento2B" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 2B *</label>
+                                <input type="number" step="0.01" id="medidor_actual_departamento2B" name="medidor_actual_departamento2B" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                            </div>
+                            <div>
+                                <label for="medidor_actual_departamento3A" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 3A *</label>
+                                <input type="number" step="0.01" id="medidor_actual_departamento3A" name="medidor_actual_departamento3A" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                            </div>
+                            <div>
+                                <label for="medidor_actual_departamento3B" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 3B *</label>
+                                <input type="number" step="0.01" id="medidor_actual_departamento3B" name="medidor_actual_departamento3B" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Parámetros de cálculo de luz -->
-                <div class="grid">
+                <!-- Electricity Parameters -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div>
-                        <label for="valor_kw"><i class="fa-solid fa-bolt"></i> Valor de KW *</label>
-                        <input type="number" step="0.0001" id="valor_kw" name="valor_kw" placeholder="0.0000">
-                        <small><i class="fa-solid fa-info-circle"></i> Precio por kilowatt-hora que aparece en el recibo de luz</small>
+                        <label for="valor_kw" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                            <i class="fa-solid fa-bolt mr-1"></i> Valor de KW *
+                        </label>
+                        <input type="number" step="0.0001" id="valor_kw" name="valor_kw" placeholder="0.0000" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Precio por kilowatt-hora que aparece en el recibo de luz</p>
                     </div>
                     <div>
-                        <label for="alumbrado_publico"><i class="fa-solid fa-street-view"></i> Alumbrado público *</label>
-                        <input type="number" step="0.01" id="alumbrado_publico" name="alumbrado_publico" placeholder="0.00">
-                        <small><i class="fa-solid fa-info-circle"></i> Cargo fijo por alumbrado público del recibo</small>
+                        <label for="alumbrado_publico" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                            <i class="fa-solid fa-street-view mr-1"></i> Alumbrado público *
+                        </label>
+                        <input type="number" step="0.01" id="alumbrado_publico" name="alumbrado_publico" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Cargo fijo por alumbrado público del recibo</p>
+                    </div>
+                    <div class="sm:col-span-2 lg:col-span-1">
+                        <label for="total_luz" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                            <i class="fa-solid fa-receipt mr-1"></i> Total de Luz (recibo) *
+                        </label>
+                        <input type="number" step="0.01" id="total_luz" name="total_luz" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Monto total a pagar que aparece en el recibo de luz</p>
                     </div>
                 </div>
-                
-                <label for="total_luz"><i class="fa-solid fa-receipt"></i> Total de Luz (recibo) *</label>
-                <input type="number" step="0.01" id="total_luz" name="total_luz" placeholder="0.00">
-                <small><i class="fa-solid fa-info-circle"></i> Monto total a pagar que aparece en el recibo de luz</small>
-            </article>
-            <!-- Tarjeta: Servicio de Agua -->
-            <article>
-                <header>
-                    <h3><i class="fa-solid fa-droplet"></i> Agua</h3>
-                </header>
-                <label for="total_agua"><i class="fa-solid fa-receipt"></i> Total Agua (recibo) *</label>
-                <input type="number" step="0.01" id="total_agua" name="total_agua" placeholder="0.00">
-                <small><i class="fa-solid fa-info-circle"></i> Monto total del recibo de agua. Se divide proporcionalmente según el número de personas por departamento</small>
-            </article>
+            </div>
+
+            <!-- Water Section -->
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+                <div class="flex items-center mb-6">
+                    <div class="w-10 h-10 bg-gradient-to-br from-brand-100 to-brand-200 dark:from-slate-700 dark:to-slate-600 border border-brand-300 dark:border-slate-500 rounded-xl flex items-center justify-center mr-4">
+                        <i class="fa-solid fa-droplet text-brand-600 dark:text-slate-100"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold">Agua</h3>
+                </div>
+                <div>
+                    <label for="total_agua" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                        <i class="fa-solid fa-receipt mr-1"></i> Total Agua (recibo) *
+                    </label>
+                    <input type="number" step="0.01" id="total_agua" name="total_agua" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Monto total del recibo de agua. Se divide proporcionalmente según el número de personas por departamento</p>
+                </div>
+            </div>
             
-            <!-- Tarjeta: Servicio de Gas -->
-            <article>
-                <header>
-                    <h3><i class="fa-solid fa-fire-flame-curved"></i> Gas</h3>
-                </header>
-                <div class="grid">
+            <!-- Gas Section -->
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+                <div class="flex items-center mb-6">
+                    <div class="w-10 h-10 bg-gradient-to-br from-brand-100 to-brand-200 dark:from-slate-700 dark:to-slate-600 border border-brand-300 dark:border-slate-500 rounded-xl flex items-center justify-center mr-4">
+                        <i class="fa-solid fa-fire-flame-curved text-brand-600 dark:text-slate-100"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold">Gas</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div>
-                        <label for="gas_piso1">Primer piso</label>
-                        <input type="number" step="0.01" id="gas_piso1" name="gas_piso1" placeholder="0.00">
+                        <label for="gas_piso1" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Primer piso</label>
+                        <input type="number" step="0.01" id="gas_piso1" name="gas_piso1" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
                     </div>
                     <div>
-                        <label for="gas_departamento2A">Departamento 2A</label>
-                        <input type="number" step="0.01" id="gas_departamento2A" name="gas_departamento2A" placeholder="0.00">
+                        <label for="gas_departamento2A" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 2A</label>
+                        <input type="number" step="0.01" id="gas_departamento2A" name="gas_departamento2A" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label for="gas_departamento2B" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 2B</label>
+                        <input type="number" step="0.01" id="gas_departamento2B" name="gas_departamento2B" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label for="gas_departamento3A" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 3A</label>
+                        <input type="number" step="0.01" id="gas_departamento3A" name="gas_departamento3A" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label for="gas_departamento3B" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 3B</label>
+                        <input type="number" step="0.01" id="gas_departamento3B" name="gas_departamento3B" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
                     </div>
                 </div>
-                <div class="grid">
-                    <div>
-                        <label for="gas_departamento2B">Departamento 2B</label>
-                        <input type="number" step="0.01" id="gas_departamento2B" name="gas_departamento2B" placeholder="0.00">
-                    </div>
-                    <div>
-                        <label for="gas_departamento3A">Departamento 3A</label>
-                        <input type="number" step="0.01" id="gas_departamento3A" name="gas_departamento3A" placeholder="0.00">
-                    </div>
-                </div>
-                <div class="grid">
-                    <div>
-                        <label for="gas_departamento3B">Departamento 3B</label>
-                        <input type="number" step="0.01" id="gas_departamento3B" name="gas_departamento3B" placeholder="0.00">
-                    </div>
-                    <div></div>
-                </div>
-            </article>
+            </div>
             
-            <!-- Tarjeta: Cable e Internet -->
-            <article>
-                <header>
-                    <h3><i class="fa-solid fa-wifi"></i> Cable e internet</h3>
-                </header>
-                <div class="grid">
+            <!-- Cable and Internet Section -->
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+                <div class="flex items-center mb-6">
+                    <div class="w-10 h-10 bg-gradient-to-br from-brand-100 to-brand-200 dark:from-slate-700 dark:to-slate-600 border border-brand-300 dark:border-slate-500 rounded-xl flex items-center justify-center mr-4">
+                        <i class="fa-solid fa-wifi text-brand-600 dark:text-slate-100"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold">Cable e internet</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div>
-                        <label for="cabInt_piso1">Primer piso</label>
-                        <input type="number" step="0.01" id="cabInt_piso1" name="cabInt_piso1" placeholder="0.00">
+                        <label for="cabInt_piso1" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Primer piso</label>
+                        <input type="number" step="0.01" id="cabInt_piso1" name="cabInt_piso1" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
                     </div>
                     <div>
-                        <label for="cabInt_departamento2A">Departamento 2A</label>
-                        <input type="number" step="0.01" id="cabInt_departamento2A" name="cabInt_departamento2A" placeholder="0.00">
+                        <label for="cabInt_departamento2A" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 2A</label>
+                        <input type="number" step="0.01" id="cabInt_departamento2A" name="cabInt_departamento2A" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label for="cabInt_departamento2B" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 2B</label>
+                        <input type="number" step="0.01" id="cabInt_departamento2B" name="cabInt_departamento2B" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label for="cabInt_departamento3A" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 3A</label>
+                        <input type="number" step="0.01" id="cabInt_departamento3A" name="cabInt_departamento3A" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label for="cabInt_departamento3B" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Departamento 3B</label>
+                        <input type="number" step="0.01" id="cabInt_departamento3B" name="cabInt_departamento3B" placeholder="0.00" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 focus:outline-none transition-colors">
                     </div>
                 </div>
-                <div class="grid">
-                    <div>
-                        <label for="cabInt_departamento2B">Departamento 2B</label>
-                        <input type="number" step="0.01" id="cabInt_departamento2B" name="cabInt_departamento2B" placeholder="0.00">
-                    </div>
-                    <div>
-                        <label for="cabInt_departamento3A">Departamento 3A</label>
-                        <input type="number" step="0.01" id="cabInt_departamento3A" name="cabInt_departamento3A" placeholder="0.00">
-                    </div>
-                </div>
-                <div class="grid">
-                    <div>
-                        <label for="cabInt_departamento3B">Departamento 3B</label>
-                        <input type="number" step="0.01" id="cabInt_departamento3B" name="cabInt_departamento3B" placeholder="0.00">
-                    </div>
-                    <div></div>
-                </div>
-            </article>
-            <!-- Botón de Cálculo -->
-            <article>
-                <button type="submit" id="boton_calcular" style="width: 100%;">
-                    <i class="fa-solid fa-calculator"></i>&nbsp;&nbsp;Calcular Cuentas
+            </div>
+
+            <!-- Calculate Button -->
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+                <button type="submit" id="boton_calcular" class="w-full flex items-center justify-center px-6 py-4 bg-gradient-to-r from-brand-600 to-brand-700 text-white font-semibold rounded-xl hover:bg-brand-700 focus:ring-4 focus:ring-brand-500/25 transition-all duration-300 hover:scale-[1.02] transform">
+                    <i class="fa-solid fa-calculator mr-3 text-lg"></i>
+                    Calcular Cuentas
                 </button>
-            </article>
+            </div>
         </form>
         
-        <!-- Sección de Histórico -->
-        <section id="seccion_historial" style="display: none;">
-            <article>
-                <header>
-                    <h3><i class="fa-solid fa-clock-rotate-left"></i> Histórico de Cálculos</h3>
-                </header>
-                <div style="overflow-x: auto;">
-                    <table>
+        <!-- History Section -->
+        <section id="seccion_historial" class="hidden mt-8">
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+                <div class="flex items-center mb-6">
+                    <div class="w-10 h-10 bg-gradient-to-br from-brand-100 to-brand-200 dark:from-slate-700 dark:to-slate-600 border border-brand-300 dark:border-slate-500 rounded-xl flex items-center justify-center mr-4">
+                        <i class="fa-solid fa-clock-rotate-left text-brand-600 dark:text-slate-100"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold">Histórico de Cálculos</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
                         <thead>
-                            <tr>
-                                <th>Período</th>
-                                <th>Fecha de Cálculo</th>
-                                <th>Acciones</th>
+                            <tr class="border-b border-slate-200 dark:border-slate-700">
+                                <th class="text-left py-3 px-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Período</th>
+                                <th class="text-left py-3 px-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Fecha de Cálculo</th>
+                                <th class="text-left py-3 px-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="tabla_historial_body">
-                            <!-- Las filas se llenan dinámicamente con JavaScript -->
+                        <tbody id="tabla_historial_body" class="divide-y divide-slate-200 dark:divide-slate-700">
                         </tbody>
                     </table>
                 </div>
-            </article>
+            </div>
         </section>
         
-        <hr id="linea" style="visibility: hidden;">
-        <section id="descargas" style="visibility: hidden;">
-            <h3 id="fecha_hora_calculo"></h3>
+        <!-- Downloads Section -->
+        <div id="linea" class="hidden"></div>
+        <section id="descargas" class="hidden mt-8">
+            <h3 id="fecha_hora_calculo" class="text-2xl font-semibold mb-6"></h3>
             
-            <!-- Tarjeta de Resultados con Grid Optimizado -->
-            <article>
-                <header>
-                    <h4><i class="fa-solid fa-file-export"></i> Descargar Cuentas por Departamento</h4>
-                </header>
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+                <div class="flex items-center mb-6">
+                    <div class="w-10 h-10 bg-gradient-to-br from-brand-100 to-brand-200 dark:from-slate-700 dark:to-slate-600 border border-brand-300 dark:border-slate-500 rounded-xl flex items-center justify-center mr-4">
+                        <i class="fa-solid fa-file-export text-brand-600 dark:text-slate-100"></i>
+                    </div>
+                    <h4 class="text-xl font-semibold">Descargar Cuentas por Departamento</h4>
+                </div>
                 
-                <!-- Piso 1 -->
-                <div class="grid" style="margin-bottom: var(--pico-spacing);">
-                    <div>
-                        <button data-target="modal_piso1" onClick="toggleModal(event)" style="width: 100%;">
-                            <i class="fa-solid fa-file-pdf"></i>&nbsp;&nbsp;Ver cuentas del "Piso 1"
+                <div class="space-y-4">
+                    <!-- Floor 1 -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button data-target="modal_piso1" onClick="toggleModal(event)" class="flex items-center justify-center px-4 py-3 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                            <i class="fa-solid fa-file-pdf mr-2"></i>
+                            Ver cuentas del "Piso 1"
+                        </button>
+                        <button onClick="descargarPDF('1')" class="flex items-center justify-center px-4 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors">
+                            <i class="fa-solid fa-download mr-2"></i>
+                            Descargar cuentas del "Piso 1"
                         </button>
                     </div>
-                    <div>
-                        <button onClick="descargarPDF('1')" style="width: 100%;">
-                            <i class="fa-solid fa-download"></i>&nbsp;&nbsp;Descargar cuentas del "Piso 1"
+                    
+                    <!-- Apartment 2A -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button data-target="modal_departamento2A" onClick="toggleModal(event)" class="flex items-center justify-center px-4 py-3 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                            <i class="fa-solid fa-file-pdf mr-2"></i>
+                            Ver cuentas del "Departamento 2A"
+                        </button>
+                        <button onClick="descargarPDF('2A')" class="flex items-center justify-center px-4 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors">
+                            <i class="fa-solid fa-download mr-2"></i>
+                            Descargar cuentas del "Departamento 2A"
+                        </button>
+                    </div>
+                    
+                    <!-- Apartment 2B -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button data-target="modal_departamento2B" onClick="toggleModal(event)" class="flex items-center justify-center px-4 py-3 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                            <i class="fa-solid fa-file-pdf mr-2"></i>
+                            Ver cuentas del "Departamento 2B"
+                        </button>
+                        <button onClick="descargarPDF('2B')" class="flex items-center justify-center px-4 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors">
+                            <i class="fa-solid fa-download mr-2"></i>
+                            Descargar cuentas del "Departamento 2B"
+                        </button>
+                    </div>
+                    
+                    <!-- Apartment 3A -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button data-target="modal_departamento3A" onClick="toggleModal(event)" class="flex items-center justify-center px-4 py-3 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                            <i class="fa-solid fa-file-pdf mr-2"></i>
+                            Ver cuentas del "Departamento 3A"
+                        </button>
+                        <button onClick="descargarPDF('3A')" class="flex items-center justify-center px-4 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors">
+                            <i class="fa-solid fa-download mr-2"></i>
+                            Descargar cuentas del "Departamento 3A"
+                        </button>
+                    </div>
+                    
+                    <!-- Apartment 3B -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button data-target="modal_departamento3B" onClick="toggleModal(event)" class="flex items-center justify-center px-4 py-3 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                            <i class="fa-solid fa-file-pdf mr-2"></i>
+                            Ver cuentas del "Departamento 3B"
+                        </button>
+                        <button onClick="descargarPDF('3B')" class="flex items-center justify-center px-4 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors">
+                            <i class="fa-solid fa-download mr-2"></i>
+                            Descargar cuentas del "Departamento 3B"
                         </button>
                     </div>
                 </div>
-                
-                <!-- Departamento 2A -->
-                <div class="grid" style="margin-bottom: var(--pico-spacing);">
-                    <div>
-                        <button data-target="modal_departamento2A" onClick="toggleModal(event)" style="width: 100%;">
-                            <i class="fa-solid fa-file-pdf"></i>&nbsp;&nbsp;Ver cuentas del "Departamento 2A"
-                        </button>
-                    </div>
-                    <div>
-                        <button onClick="descargarPDF('2A')" style="width: 100%;">
-                            <i class="fa-solid fa-download"></i>&nbsp;&nbsp;Descargar cuentas del "Departamento 2A"
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Departamento 2B -->
-                <div class="grid" style="margin-bottom: var(--pico-spacing);">
-                    <div>
-                        <button data-target="modal_departamento2B" onClick="toggleModal(event)" style="width: 100%;">
-                            <i class="fa-solid fa-file-pdf"></i>&nbsp;&nbsp;Ver cuentas del "Departamento 2B"
-                        </button>
-                    </div>
-                    <div>
-                        <button onClick="descargarPDF('2B')" style="width: 100%;">
-                            <i class="fa-solid fa-download"></i>&nbsp;&nbsp;Descargar cuentas del "Departamento 2B"
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Departamento 3A -->
-                <div class="grid" style="margin-bottom: var(--pico-spacing);">
-                    <div>
-                        <button data-target="modal_departamento3A" onClick="toggleModal(event)" style="width: 100%;">
-                            <i class="fa-solid fa-file-pdf"></i>&nbsp;&nbsp;Ver cuentas del "Departamento 3A"
-                        </button>
-                    </div>
-                    <div>
-                        <button onClick="descargarPDF('3A')" style="width: 100%;">
-                            <i class="fa-solid fa-download"></i>&nbsp;&nbsp;Descargar cuentas del "Departamento 3A"
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Departamento 3B -->
-                <div class="grid">
-                    <div>
-                        <button data-target="modal_departamento3B" onClick="toggleModal(event)" style="width: 100%;">
-                            <i class="fa-solid fa-file-pdf"></i>&nbsp;&nbsp;Ver cuentas del "Departamento 3B"
-                        </button>
-                    </div>
-                    <div>
-                        <button onClick="descargarPDF('3B')" style="width: 100%;">
-                            <i class="fa-solid fa-download"></i>&nbsp;&nbsp;Descargar cuentas del "Departamento 3B"
-                        </button>
-                    </div>
-                </div>
-            </article>
+            </div>
         </section>
     </main>
     
     <!-- Footer -->
-    <footer class="container" style="text-align: center; margin-top: 2rem; padding: var(--pico-spacing) 0; border-top: 1px solid var(--pico-muted-border-color);">
-        <small>
-            Hecho con ❤️ por <a href="https://github.com/gianfrancocespedes" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">Gianfranco Céspedes</a>
-        </small>
-        <br>
-        <small>
-            <a href="docs.html" style="color: var(--pico-primary); text-decoration: none; margin-right: 1rem;">
-                <i class="fa-solid fa-book" style="font-size: 0.8em;"></i> Manual de usuario
-            </a>
-            <a href="mailto:gianmcf2@gmail.com" style="color: var(--pico-primary); text-decoration: none; margin-right: 1rem;">
-                <i class="fa-solid fa-envelope" style="font-size: 0.8em;"></i> Contacto
-            </a>
-            <a id="link_instalar_pwa" href="#" style="display: none; color: var(--pico-primary); text-decoration: none; cursor: pointer; margin-right: 1rem;">
-                <i class="fa-solid fa-download" style="font-size: 0.8em;"></i> Instalar app
-            </a>
-            <span style="color: var(--pico-muted-color);">
-                <i class="fa-solid fa-code-branch" style="font-size: 0.8em;"></i> v3.0.0
-            </span>
-        </small>
+    <footer class="border-t border-slate-200 dark:border-slate-800 py-12 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-900">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="flex items-center justify-center space-x-3 mb-4">
+                <div class="w-8 h-8 bg-gradient-to-br from-brand-600 to-brand-700 rounded-lg flex items-center justify-center">
+                    <i class="fa-solid fa-house text-white text-sm"></i>
+                </div>
+                <span class="font-semibold text-lg">Cuentas Casa</span>
+            </div>
+            <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">
+                Hecho con ❤️ por <a href="https://github.com/gianfrancocespedes" target="_blank" rel="noopener noreferrer" class="text-slate-900 dark:text-slate-50 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Gianfranco Céspedes</a>
+            </p>
+            <div class="flex flex-wrap justify-center gap-6 text-sm">
+                <a href="docs.html" class="flex items-center text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 transition-colors">
+                    <i class="fa-solid fa-book text-xs mr-1"></i>
+                    Manual de usuario
+                </a>
+                <a href="mailto:gianmcf2@gmail.com" class="flex items-center text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 transition-colors">
+                    <i class="fa-solid fa-envelope text-xs mr-1"></i>
+                    Contacto
+                </a>
+                <a id="link_instalar_pwa" href="#" class="hidden flex items-center text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 transition-colors cursor-pointer">
+                    <i class="fa-solid fa-download text-xs mr-1"></i>
+                    Instalar app
+                </a>
+                <span class="text-slate-500 dark:text-slate-500">
+                    <i class="fa-solid fa-code-branch text-xs mr-1"></i>
+                    v3.0.0
+                </span>
+            </div>
+        </div>
     </footer>
     
-    <!-- Modal Piso 1 -->
-    <dialog id="modal_piso1">
-        <article>
-            <!-- <header>
-                <a href="#close" aria-label="Close" class="close" data-target="modal-example" onClick="toggleModal(event)"></a>
-                Modal title
-            </header> -->
-            <h5>Detalle de las cuentas correspondientes al primer piso</h5>
-            <iframe id="iframe_piso1" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
-            <footer>
-                <a href="#" role="button" class="secondary" data-target="modal_piso1" onClick="toggleModal(event)">
-                    Cerrar
-                </a>
-                <a href="#" role="button" data-target="modal_piso1" onClick="descargarPDF('1');toggleModal(event);">
-                    Descargar PDF
-                </a>
-            </footer>
-        </article>
-    </dialog>
-    <!-- Modal Piso 1 -->
-
-    <!-- Modal Departamento 2A -->
-    <dialog id="modal_departamento2A">
-        <article>
-            <h5>Detalle de las cuentas correspondientes al Dep. 2A</h5>
-            <iframe id="iframe_departamento2A" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
-            <footer>
-                <a href="#" role="button" class="secondary" data-target="modal_departamento2A" onClick="toggleModal(event)">
-                    Cerrar
-                </a>
-                <a href="#" role="button" data-target="modal_departamento2A" onClick="descargarPDF('2A');toggleModal(event);">
-                    Descargar PDF
-                </a>
-            </footer>
-        </article>
-    </dialog>
-    <!-- Modal Departamento 2A -->
-
-    <!-- Modal Departamento 2B -->
-    <dialog id="modal_departamento2B">
-        <article>
-            <h5>Detalle de las cuentas correspondientes al Dep. 2B</h5>
-            <iframe id="iframe_departamento2B" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
-            <footer>
-                <a href="#" role="button" class="secondary" data-target="modal_departamento2B" onClick="toggleModal(event)">
-                    Cerrar
-                </a>
-                <a href="#" role="button" data-target="modal_departamento2B" onClick="descargarPDF('2B');toggleModal(event);">
-                    Descargar PDF
-                </a>
-            </footer>
-        </article>
-    </dialog>
-    <!-- Modal Departamento 2B -->
-
-    <!-- Modal Departamento 3A -->
-    <dialog id="modal_departamento3A">
-        <article>
-            <h5>Detalle de las cuentas correspondientes al Dep. 3A</h5>
-            <iframe id="iframe_departamento3A" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
-            <footer>
-                <a href="#" role="button" class="secondary" data-target="modal_departamento3A" onClick="toggleModal(event)">
-                    Cerrar
-                </a>
-                <a href="#" role="button" data-target="modal_departamento3A" onClick="descargarPDF('3A');toggleModal(event);">
-                    Descargar PDF
-                </a>
-            </footer>
-        </article>
-    </dialog>
-    <!-- Modal Departamento 3A -->
-
-    <!-- Modal Departamento 3B -->
-    <dialog id="modal_departamento3B">
-        <article>
-            <h5>Detalle de las cuentas correspondientes al Dep. 3B</h5>
-            <iframe id="iframe_departamento3B" style="width: 100%; height: 400px; border: none; display: block;"></iframe>
-            <footer>
-                <a href="#" role="button" class="secondary" data-target="modal_departamento3B" onClick="toggleModal(event)">
-                    Cerrar
-                </a>
-                <a href="#" role="button" data-target="modal_departamento3B" onClick="descargarPDF('3B');toggleModal(event);">
-                    Descargar PDF
-                </a>
-            </footer>
-        </article>
-    </dialog>
-    <!-- Modal Departamento 3B -->
-
-    <!-- Modal para Detalles del Histórico -->
-    <dialog id="modal_detalles_historial">
-        <article>
-            <header>
-                <a href="#close" aria-label="Close" class="close" data-target="modal_detalles_historial" onclick="toggleModal(event)"></a>
-                <h4>Detalles del Cálculo</h4>
-            </header>
-            <div id="modal_detalles_content">
-                <!-- El contenido se carga dinámicamente -->
+    <!-- Modals -->
+    <!-- Modal Floor 1 -->
+    <div id="modal_piso1" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-slate-200 dark:border-slate-800">
+            <div class="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800">
+                <h5 class="text-xl font-semibold">Detalle de las cuentas correspondientes al primer piso</h5>
+                <button data-target="modal_piso1" onClick="toggleModal(event)" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
             </div>
-            <footer>
-                <a href="#" role="button" class="secondary" data-target="modal_detalles_historial" onclick="toggleModal(event)">
+            <div class="p-6">
+                <iframe id="iframe_piso1" class="w-full h-96 rounded-lg border border-slate-200 dark:border-slate-700"></iframe>
+            </div>
+            <div class="flex justify-end gap-3 p-6 border-t border-slate-200 dark:border-slate-800">
+                <button data-target="modal_piso1" onClick="toggleModal(event)" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-800 dark:hover:text-slate-200 border border-slate-300 dark:border-slate-600 rounded-lg transition-colors">
                     Cerrar
-                </a>
-            </footer>
-        </article>
-    </dialog>
-    <!-- Modal para Detalles del Histórico -->
+                </button>
+                <button onClick="descargarPDF('1');toggleModal(event);" data-target="modal_piso1" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors">
+                    Descargar PDF
+                </button>
+            </div>
+        </div>
+    </div>
 
-    <!-- Modal para Importar/Exportar Datos -->
-    <dialog id="modal_import_export">
-        <article style="max-width: 600px;">
-            <header>
-                <a href="#close" aria-label="Close" class="close" data-target="modal_import_export" onclick="toggleModal(event)"></a>
-                <h4><i class="fa-solid fa-file-import"></i> Importar/Exportar Datos</h4>
-            </header>
+    <!-- Modal Apartment 2A -->
+    <div id="modal_departamento2A" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-slate-200 dark:border-slate-800">
+            <div class="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800">
+                <h5 class="text-xl font-semibold">Detalle de las cuentas correspondientes al Dep. 2A</h5>
+                <button data-target="modal_departamento2A" onClick="toggleModal(event)" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <iframe id="iframe_departamento2A" class="w-full h-96 rounded-lg border border-slate-200 dark:border-slate-700"></iframe>
+            </div>
+            <div class="flex justify-end gap-3 p-6 border-t border-slate-200 dark:border-slate-800">
+                <button data-target="modal_departamento2A" onClick="toggleModal(event)" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-800 dark:hover:text-slate-200 border border-slate-300 dark:border-slate-600 rounded-lg transition-colors">
+                    Cerrar
+                </button>
+                <button onClick="descargarPDF('2A');toggleModal(event);" data-target="modal_departamento2A" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors">
+                    Descargar PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Apartment 2B -->
+    <div id="modal_departamento2B" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-slate-200 dark:border-slate-800">
+            <div class="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800">
+                <h5 class="text-xl font-semibold">Detalle de las cuentas correspondientes al Dep. 2B</h5>
+                <button data-target="modal_departamento2B" onClick="toggleModal(event)" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <iframe id="iframe_departamento2B" class="w-full h-96 rounded-lg border border-slate-200 dark:border-slate-700"></iframe>
+            </div>
+            <div class="flex justify-end gap-3 p-6 border-t border-slate-200 dark:border-slate-800">
+                <button data-target="modal_departamento2B" onClick="toggleModal(event)" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-800 dark:hover:text-slate-200 border border-slate-300 dark:border-slate-600 rounded-lg transition-colors">
+                    Cerrar
+                </button>
+                <button onClick="descargarPDF('2B');toggleModal(event);" data-target="modal_departamento2B" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors">
+                    Descargar PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Apartment 3A -->
+    <div id="modal_departamento3A" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-slate-200 dark:border-slate-800">
+            <div class="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800">
+                <h5 class="text-xl font-semibold">Detalle de las cuentas correspondientes al Dep. 3A</h5>
+                <button data-target="modal_departamento3A" onClick="toggleModal(event)" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <iframe id="iframe_departamento3A" class="w-full h-96 rounded-lg border border-slate-200 dark:border-slate-700"></iframe>
+            </div>
+            <div class="flex justify-end gap-3 p-6 border-t border-slate-200 dark:border-slate-800">
+                <button data-target="modal_departamento3A" onClick="toggleModal(event)" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-800 dark:hover:text-slate-200 border border-slate-300 dark:border-slate-600 rounded-lg transition-colors">
+                    Cerrar
+                </button>
+                <button onClick="descargarPDF('3A');toggleModal(event);" data-target="modal_departamento3A" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors">
+                    Descargar PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Apartment 3B -->
+    <div id="modal_departamento3B" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-slate-200 dark:border-slate-800">
+            <div class="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800">
+                <h5 class="text-xl font-semibold">Detalle de las cuentas correspondientes al Dep. 3B</h5>
+                <button data-target="modal_departamento3B" onClick="toggleModal(event)" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <iframe id="iframe_departamento3B" class="w-full h-96 rounded-lg border border-slate-200 dark:border-slate-700"></iframe>
+            </div>
+            <div class="flex justify-end gap-3 p-6 border-t border-slate-200 dark:border-slate-800">
+                <button data-target="modal_departamento3B" onClick="toggleModal(event)" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-800 dark:hover:text-slate-200 border border-slate-300 dark:border-slate-600 rounded-lg transition-colors">
+                    Cerrar
+                </button>
+                <button onClick="descargarPDF('3B');toggleModal(event);" data-target="modal_departamento3B" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors">
+                    Descargar PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal History Details -->
+    <div id="modal_detalles_historial" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-slate-200 dark:border-slate-800">
+            <div class="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800">
+                <h4 class="text-xl font-semibold">Detalles del Cálculo</h4>
+                <button data-target="modal_detalles_historial" onclick="toggleModal(event)" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div id="modal_detalles_content" class="p-6 overflow-auto max-h-96">
+            </div>
+            <div class="flex justify-end gap-3 p-6 border-t border-slate-200 dark:border-slate-800">
+                <button data-target="modal_detalles_historial" onclick="toggleModal(event)" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-800 dark:hover:text-slate-200 border border-slate-300 dark:border-slate-600 rounded-lg transition-colors">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Import/Export -->
+    <div id="modal_import_export" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden border border-slate-200 dark:border-slate-800">
+            <div class="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800">
+                <div class="flex items-center">
+                    <i class="fa-solid fa-file-import text-brand-600 dark:text-slate-400 mr-2"></i>
+                    <h4 class="text-xl font-semibold">Importar/Exportar Datos</h4>
+                </div>
+                <button data-target="modal_import_export" onclick="toggleModal(event)" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
             
-            <!-- Sección de Importación -->
-            <div style="margin-bottom: var(--pico-spacing);">
-                <h5><i class="fa-solid fa-file-upload"></i> Importar Datos</h5>
-                <small style="display: block; margin-bottom: var(--pico-spacing);">
-                    <i class="fa-solid fa-info-circle"></i> 
-                    Carga un archivo de respaldo para restaurar tu histórico de cálculos. Puedes elegir sobreescribir completamente o añadir a los datos actuales.
-                </small>
-                <input type="file" id="file_import" accept=".json,.txt" style="margin-bottom: var(--pico-spacing);">
-                
-                <label for="sobreescribir_historial" style="display: flex; align-items: center; margin-bottom: var(--pico-spacing);">
-                    <input type="checkbox" id="sobreescribir_historial" checked style="margin-right: 0.5rem;">
-                    <span>Sobreescribir histórico actual (si está desmarcado, se añadirán los registros)</span>
-                </label>
-                
-                <button onclick="importarDatos()" style="width: 100%;">
-                    <i class="fa-solid fa-upload"></i>&nbsp;&nbsp;Importar Archivo
-                </button>
+            <div class="p-6 space-y-6">
+                <!-- Import Section -->
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fa-solid fa-file-upload text-brand-600 dark:text-slate-400 mr-2"></i>
+                        <h5 class="text-lg font-semibold">Importar Datos</h5>
+                    </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">
+                        Carga un archivo de respaldo para restaurar tu histórico de cálculos. Puedes elegir sobreescribir completamente o añadir a los datos actuales.
+                    </p>
+                    <input type="file" id="file_import" accept=".json,.txt" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 mb-4">
+                    
+                    <label class="flex items-center mb-4">
+                        <input type="checkbox" id="sobreescribir_historial" checked class="mr-3 w-4 h-4 text-brand-600 border-slate-300 rounded focus:ring-brand-500">
+                        <span class="text-sm text-slate-700 dark:text-slate-300">Sobreescribir histórico actual (si está desmarcado, se añadirán los registros)</span>
+                    </label>
+                    
+                    <button onclick="importarDatos()" class="w-full flex items-center justify-center px-4 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors">
+                        <i class="fa-solid fa-upload mr-2"></i>
+                        Importar Archivo
+                    </button>
+                </div>
+
+                <div class="border-t border-slate-200 dark:border-slate-700 my-6"></div>
+
+                <!-- Export Section -->
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fa-solid fa-file-download text-brand-600 dark:text-slate-400 mr-2"></i>
+                        <h5 class="text-lg font-semibold">Exportar Datos</h5>
+                    </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">
+                        Descarga un archivo de respaldo con todo tu histórico de cálculos para guardarlo como copia de seguridad.
+                    </p>
+                    <button onclick="exportarDatos()" class="w-full flex items-center justify-center px-4 py-3 bg-slate-600 hover:bg-slate-700 text-white rounded-lg transition-colors">
+                        <i class="fa-solid fa-download mr-2"></i>
+                        Descargar Respaldo
+                    </button>
+                </div>
             </div>
 
-            <hr>
-
-            <!-- Sección de Exportación -->
-            <div>
-                <h5><i class="fa-solid fa-file-download"></i> Exportar Datos</h5>
-                <small style="display: block; margin-bottom: var(--pico-spacing);">
-                    <i class="fa-solid fa-info-circle"></i> 
-                    Descarga un archivo de respaldo con todo tu histórico de cálculos para guardarlo como copia de seguridad.
-                </small>
-                <button onclick="exportarDatos()" style="width: 100%;">
-                    <i class="fa-solid fa-download"></i>&nbsp;&nbsp;Descargar Respaldo
-                </button>
-            </div>
-
-            <footer>
-                <a href="#" role="button" class="secondary" data-target="modal_import_export" onclick="toggleModal(event)">
+            <div class="flex justify-end gap-3 p-6 border-t border-slate-200 dark:border-slate-800">
+                <button data-target="modal_import_export" onclick="toggleModal(event)" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-800 dark:hover:text-slate-200 border border-slate-300 dark:border-slate-600 rounded-lg transition-colors">
                     Cerrar
-                </a>
-            </footer>
-        </article>
-    </dialog>
-    <!-- Modal para Importar/Exportar Datos -->
+                </button>
+            </div>
+        </div>
+    </div>
 
-
-    <!-- Código JavaScript -->
+    <!-- JavaScript -->
     <!-- Utilidades genéricas primero -->
     <script src="js/utils/formatters.js"></script>
     <script src="js/utils/dom.js"></script>
@@ -558,7 +770,7 @@
     <script src="js/features/history.js"></script>
     <script src="js/features/import-export.js"></script>
 
-    <!-- UI -->
+    <!-- UI Components -->
     <script src="js/ui/modal.js"></script>
 
     <!-- PWA Service Worker -->
@@ -567,6 +779,7 @@
     <!-- Inicialización al final -->
     <script src="js/core/app.js"></script>
     
-    <!-- Service Worker registration now handled by js/features/pwa.js -->
+    
+    <!-- Service Worker registration handled by js/features/pwa.js -->
 </body>
 </html>

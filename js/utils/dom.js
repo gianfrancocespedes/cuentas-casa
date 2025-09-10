@@ -59,13 +59,17 @@ function toggleElementVisibility(element, displayType = 'block') {
 }
 
 /**
- * Establece la visibilidad de un elemento usando la propiedad visibility
+ * Establece la visibilidad de un elemento usando clases CSS
  * @param {HTMLElement} element - Elemento a modificar
- * @param {boolean} visible - true para visible, false para hidden
+ * @param {boolean} visible - true para mostrar, false para ocultar
  */
 function setElementVisibility(element, visible) {
     if (element) {
-        element.style.visibility = visible ? 'visible' : 'hidden';
+        if (visible) {
+            element.classList.remove('hidden');
+        } else {
+            element.classList.add('hidden');
+        }
     }
 }
 
@@ -180,3 +184,4 @@ function scrollToElement(element, block = 'start') {
         });
     }
 }
+

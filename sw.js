@@ -22,13 +22,10 @@ const CACHE_URLS = [
   './js/utils/pdf.js',
   
   // Recursos externos de CDN (críticos para el funcionamiento)
-  'https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css',
+  'https://cdn.tailwindcss.com',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
-  
-  // CDNs para docs.html
   'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
-  'https://cdn.tailwindcss.com',
   
   // Iconos de la PWA
   './icons/icon-192.png',

@@ -1,95 +1,120 @@
-/*
- * Modal
- *
- * Pico.css - https://picocss.com
- * Copyright 2019-2022 - Licensed under MIT
+/**
+ * SISTEMA DE MODALES PERSONALIZADO
+ * Sistema de modales usando Tailwind CSS con animaciones y gestión de estado
+ * Compatible con el sistema de temas y funcionalidades de la aplicación
  */
 
-// Config
-const isOpenClass = 'modal-is-open';
-const openingClass = 'modal-is-opening';
-const closingClass = 'modal-is-closing';
-const animationDuration = 400; // ms
-let visibleModal = null;
+// Custom Modal System
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Modal Management System
+    window.toggleModal = function(event) {
+        event.preventDefault();
+        const targetId = event.currentTarget.getAttribute('data-target');
+        const modal = document.getElementById(targetId);
+        
+        if (!modal) return;
+        
+        if (modal.classList.contains('hidden')) {
+            openModal(modal);
+        } else {
+            closeModal(modal);
+        }
+    };
+    
+    // Open Modal Function - Much simpler with always-visible scrollbar
+    function openModal(modal) {
+        document.body.classList.add('modal-open');
+        modal.classList.remove('hidden');
+        
+        // Add fade-in animation
+        modal.style.opacity = '0';
+        setTimeout(() => {
+            modal.style.opacity = '1';
+        }, 10);
+    }
+    
+    // Close Modal Function
+    function closeModal(modal) {
+        modal.style.opacity = '0';
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            document.body.classList.remove('modal-open');
+        }, 200);
+    }
+    
+    // Close modal when clicking backdrop
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('fixed') && 
+            e.target.classList.contains('inset-0') && 
+            e.target.classList.contains('bg-black/50')) {
+            closeModal(e.target);
+        }
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const openModals = document.querySelectorAll('.fixed.inset-0:not(.hidden)');
+            openModals.forEach(modal => {
+                closeModal(modal);
+            });
+        }
+    });
+    
+    // Theme Management
+    window.cambiarTema = function() {
+        const html = document.documentElement;
+        const isDark = html.classList.contains('dark');
+        
+        if (isDark) {
+            html.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        } else {
+            html.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        }
+    };
+    
+    // Initialize theme
+    const savedTheme = localStorage.getItem('theme');
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const theme = savedTheme || systemTheme;
 
-
-// Toggle modal
-const toggleModal = event => {
-  event.preventDefault();
-  const modal = document.getElementById(event.currentTarget.getAttribute('data-target'));
-  (typeof(modal) != 'undefined' && modal != null)
-    && isModalOpen(modal) ? closeModal(modal) : openModal(modal)
-}
-
-// Is modal open
-const isModalOpen = modal => {
-  return modal.hasAttribute('open') && modal.getAttribute('open') != 'false' ? true : false;
-}
-
-// Open modal
-const openModal = modal => {
-  if (isScrollbarVisible()) {
-    document.documentElement.style.setProperty('--scrollbar-width', `${getScrollbarWidth()}px`);
-  }
-  document.documentElement.classList.add(isOpenClass, openingClass);
-  setTimeout(() => {
-    visibleModal = modal;
-    document.documentElement.classList.remove(openingClass);
-  }, animationDuration);
-  modal.setAttribute('open', true);
-}
-
-// Close modal
-const closeModal = modal => {
-  visibleModal = null;
-  document.documentElement.classList.add(closingClass);
-  setTimeout(() => {
-    document.documentElement.classList.remove(closingClass, isOpenClass);
-    document.documentElement.style.removeProperty('--scrollbar-width');
-    modal.removeAttribute('open');
-  }, animationDuration);
-}
-
-// Close with a click outside
-document.addEventListener('click', event => {
-  if (visibleModal != null) {
-    const modalContent = visibleModal.querySelector('article');
-    const isClickInside = modalContent.contains(event.target);
-    !isClickInside && closeModal(visibleModal);
-  }
+    if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+    }
+    
+    // Import/Export Modal Function
+    window.abrirModalImportExport = function() {
+        const modal = document.getElementById('modal_import_export');
+        if (modal) {
+            openModal(modal);
+        }
+    };
+    
+    // Make openModal and closeModal globally available for compatibility with history.js
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+    
+    // Override the toggleModal function in history.js context for modal_detalles_historial
+    const originalToggleModal = window.toggleModal;
+    window.toggleModal = function(event) {
+        // Check if this is specifically for the history details modal
+        const targetId = event.currentTarget.getAttribute('data-target');
+        if (targetId === 'modal_detalles_historial') {
+            const modal = document.getElementById(targetId);
+            if (modal) {
+                if (modal.classList.contains('hidden')) {
+                    openModal(modal);
+                } else {
+                    closeModal(modal);
+                }
+            }
+        } else {
+            // Use the original function for other modals
+            originalToggleModal(event);
+        }
+    };
+    
 });
-
-// Close with Esc key
-document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && visibleModal != null) {
-    closeModal(visibleModal);
-  }
-});
-
-// Get scrollbar width
-const getScrollbarWidth = () => {
-
-  // Creating invisible container
-  const outer = document.createElement('div');
-  outer.style.visibility = 'hidden';
-  outer.style.overflow = 'scroll'; // forcing scrollbar to appear
-  outer.style.msOverflowStyle = 'scrollbar'; // needed for WinJS apps
-  document.body.appendChild(outer);
-
-  // Creating inner element and placing it in the container
-  const inner = document.createElement('div');
-  outer.appendChild(inner);
-
-  // Calculating difference between container's full width and the child width
-  const scrollbarWidth = (outer.offsetWidth - inner.offsetWidth);
-
-  // Removing temporary elements from the DOM
-  outer.parentNode.removeChild(outer);
-
-  return scrollbarWidth;
-}
-
-// Is scrollbar visible
-const isScrollbarVisible = () => {
-  return document.body.scrollHeight > screen.height;
-}

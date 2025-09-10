@@ -49,12 +49,25 @@ function generateExportTimestamp() {
 }
 
 /**
- * Formatea una fecha a string local
+ * Formatea una fecha a string con formato de 2 dígitos y AM/PM
  * @param {Date} date - Fecha a formatear
- * @returns {string} Fecha formateada
+ * @returns {string} Fecha formateada DD/MM/YYYY HH:MM:SS AM/PM
  */
 function formatDate(date) {
-    return date.toLocaleString();
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    
+    let hours = date.getHours();
+    const ampm = hours >= 12 ? 'p.m.' : 'a.m.';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // la hora '0' debe ser '12'
+    const hoursStr = String(hours).padStart(2, '0');
+    
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    
+    return `${day}/${month}/${year} ${hoursStr}:${minutes}:${seconds} ${ampm}`;
 }
 
 /**

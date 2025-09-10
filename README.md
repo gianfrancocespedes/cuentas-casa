@@ -123,8 +123,6 @@ npx serve
 │   │   ├── history.js                # Gestión de historial de cálculos
 │   │   ├── import-export.js          # Backup/restore de datos
 │   │   └── pwa.js                    # Funcionalidad de instalación PWA
-│   └── 🎭 ui/
-│       └── modal.js                  # Sistema de modales con Pico CSS
 ├── ⚖️ LICENSE                         # Licencia dual (no comercial/comercial)
 └── 📖 README.md                      # Este archivo
 ```
@@ -146,7 +144,7 @@ npx serve
 
 | Librería | Uso | URL |
 |----------|-----|-----|
-| **[Pico CSS](https://picocss.com)** | Framework UI minimalista | `@picocss/pico@2.0.6` |
+| **[Tailwind CSS](https://tailwindcss.com)** | Framework UI minimalista | `@tailwindcss/tailwind@2.0.6` |
 | **[Font Awesome](https://fontawesome.com)** | Iconos vectoriales | `@fortawesome/fontawesome-free@6.6.0` |
 | **[jsPDF](https://github.com/MrRio/jsPDF)** | Generación de PDFs | `jspdf@2.5.1` |
 
@@ -229,7 +227,7 @@ npx serve
 | **🔄 Backup Automático** | Protección de datos con exportación JSON |
 
 ### **👥 Experiencia de Usuario**
-- **🎨 Interfaz Intuitiva**: Diseño limpio con Pico CSS
+- **🎨 Interfaz Intuitiva**: Diseño limpio con Tailwind CSS
 - **🌓 Temas Adaptativos**: Modo claro/oscuro automático  
 - **📱 Mobile First**: Optimizado para uso en smartphones
 - **♿ Accesibilidad**: Compatible con lectores de pantalla
@@ -285,7 +283,7 @@ Ver el archivo [LICENSE](LICENSE) para términos completos.
 
 ## 🙏 Agradecimientos
 
-- 🎨 **[Pico CSS](https://picocss.com)** - Por el framework CSS minimalista y elegante
+- 🎨 **[Tailwind CSS](https://tailwindcss.com)** - Por el framework CSS minimalista y elegante
 - 📄 **[jsPDF](https://github.com/MrRio/jsPDF)** - Por hacer posible la generación de PDFs en el navegador
 - 🎭 **[Font Awesome](https://fontawesome.com)** - Por los iconos hermosos y consistentes
 - 🏠 **Comunidad de Residentes** - Por las ideas y feedback que hicieron este proyecto posible

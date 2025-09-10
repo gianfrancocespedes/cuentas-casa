@@ -77,16 +77,16 @@ function mostrarHistorial() {
     historial.forEach(entrada => {
         const fila = document.createElement('tr');
         fila.innerHTML = `
-            <td>${getMonthName(entrada.mes)} ${entrada.año}</td>
-            <td>${entrada.fecha_calculo}</td>
-            <td>
-                <button onclick="verDetallesCalculo(${entrada.id})" style="margin-right: 0.5rem;" title="Ver detalles">
+            <td class="py-4 px-2 text-sm text-slate-900 dark:text-slate-100">${getMonthName(entrada.mes)} ${entrada.año}</td>
+            <td class="py-4 px-2 text-sm text-slate-900 dark:text-slate-100">${entrada.fecha_calculo}</td>
+            <td class="py-4 px-2">
+                <button onclick="verDetallesCalculo(${entrada.id})" class="inline-flex items-center justify-center w-8 h-8 mr-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors" title="Ver detalles">
                     <i class="fa-solid fa-eye"></i>
                 </button>
-                <button onclick="cargarCalculoAnterior(${entrada.id})" style="margin-right: 0.5rem;" title="Cargar al formulario">
+                <button onclick="cargarCalculoAnterior(${entrada.id})" class="inline-flex items-center justify-center w-8 h-8 mr-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors" title="Cargar al formulario">
                     <i class="fa-solid fa-upload"></i>
                 </button>
-                <button onclick="eliminarDelHistorial(${entrada.id})" class="secondary" title="Eliminar">
+                <button onclick="eliminarDelHistorial(${entrada.id})" class="inline-flex items-center justify-center w-8 h-8 text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors" title="Eliminar">
                     <i class="fa-solid fa-trash"></i>
                 </button>
             </td>

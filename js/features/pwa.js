@@ -86,17 +86,17 @@ function mostrarMensajeInstalacion() {
             right: 20px; 
             z-index: 1000; 
             max-width: 300px;
-            background: var(--pico-background-color, #fff); 
-            border: 1px solid var(--pico-color-green-500);
-            border-left: 4px solid var(--pico-color-green-500);
+            background: white; 
+            border: 1px solid #10b981;
+            border-left: 4px solid #10b981;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             animation: slideIn 0.3s ease-out;
         ">
-            <div style="padding: var(--pico-spacing);">
-                <h6 style="color: var(--pico-color-green-700); margin: 0 0 0.5rem 0;">
+            <div style="padding: 1rem;">
+                <h6 style="color: #047857; margin: 0 0 0.5rem 0;">
                     <i class="fa-solid fa-check-circle"></i> ¡App Instalada!
                 </h6>
-                <small style="color: var(--pico-color);">Ahora puedes usar Cuentas Casa desde tu escritorio o pantalla de inicio.</small>
+                <small style="color: #374151;">Ahora puedes usar Cuentas Casa desde tu escritorio o pantalla de inicio.</small>
             </div>
         </article>
     `;
@@ -209,16 +209,16 @@ function mostrarMensajeOffline() {
             left: 20px; 
             right: 20px; 
             z-index: 1000;
-            background: var(--pico-background-color, #fff); 
-            border: 1px solid var(--pico-color-amber-500);
-            border-left: 4px solid var(--pico-color-amber-500);
+            background: white; 
+            border: 1px solid #f59e0b;
+            border-left: 4px solid #f59e0b;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         ">
-            <div style="padding: var(--pico-spacing);">
-                <h6 style="color: var(--pico-color-amber-700); margin: 0 0 0.5rem 0;">
+            <div style="padding: 1rem;">
+                <h6 style="color: #92400e; margin: 0 0 0.5rem 0;">
                     <i class="fa-solid fa-wifi" style="text-decoration: line-through;"></i> Modo Offline
                 </h6>
-                <small style="color: var(--pico-color);">Sin conexión a internet. La aplicación sigue funcionando con los datos guardados localmente.</small>
+                <small style="color: #374151;">Sin conexión a internet. La aplicación sigue funcionando con los datos guardados localmente.</small>
             </div>
         </article>
     `;
