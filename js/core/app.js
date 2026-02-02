@@ -164,14 +164,19 @@ function limpiarFormulario() {
     const camposCableInt = ['cabInt_piso1', 'cabInt_departamento2A', 'cabInt_departamento2B',
                            'cabInt_departamento3A', 'cabInt_departamento3B'];
     camposCableInt.forEach(campo => setInputValue(campo, '0'));
-    
+
+    // Resetear vigilancia a 0
+    const camposVigilancia = ['vigilancia_piso1', 'vigilancia_departamento2A', 'vigilancia_departamento2B',
+                             'vigilancia_departamento3A', 'vigilancia_departamento3B'];
+    camposVigilancia.forEach(campo => setInputValue(campo, '0'));
+
     // PASO 3: Guardar los nuevos valores en localStorage
     // Guardar valores por defecto para mes y año
     saveToStorage('calculo_mes', mesActual);
     saveToStorage('calculo_anio', añoActual);
     
     // Guardar todos los campos de 0 en localStorage
-    [...camposPersonas, ...camposMedidores, ...camposServicios, ...camposGas, ...camposCableInt]
+    [...camposPersonas, ...camposMedidores, ...camposServicios, ...camposGas, ...camposCableInt, ...camposVigilancia]
         .forEach(campo => saveToStorage(campo, '0'));
     
     // Ocultar sección de resultados si estaba visible
@@ -263,7 +268,12 @@ function nuevoCalculo() {
     const camposCableInt = ['cabInt_piso1', 'cabInt_departamento2A', 'cabInt_departamento2B',
                            'cabInt_departamento3A', 'cabInt_departamento3B'];
     camposCableInt.forEach(campo => setInputValue(campo, '0'));
-    
+
+    // Resetear vigilancia a 0
+    const camposVigilancia = ['vigilancia_piso1', 'vigilancia_departamento2A', 'vigilancia_departamento2B',
+                             'vigilancia_departamento3A', 'vigilancia_departamento3B'];
+    camposVigilancia.forEach(campo => setInputValue(campo, '0'));
+
     // Guardar en localStorage
     saveToStorage('calculo_mes', mesActual);
     saveToStorage('calculo_anio', añoActual);
@@ -282,7 +292,7 @@ function nuevoCalculo() {
     saveToStorage('personas_departamento3B', valoresPersonas.departamento3B);
     
     // Guardar campos en 0
-    [...camposMedidoresActuales, ...camposServicios, ...camposGas, ...camposCableInt]
+    [...camposMedidoresActuales, ...camposServicios, ...camposGas, ...camposCableInt, ...camposVigilancia]
         .forEach(campo => saveToStorage(campo, '0'));
     
     // Ocultar sección de resultados si estaba visible

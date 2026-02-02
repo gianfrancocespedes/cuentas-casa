@@ -72,7 +72,10 @@ function validarFormulario(datos) {
             'gas_departamento3A', 'gas_departamento3B',
             // Cable e Internet por departamento (pueden ser 0)
             'cabInt_piso1', 'cabInt_departamento2A', 'cabInt_departamento2B',
-            'cabInt_departamento3A', 'cabInt_departamento3B'
+            'cabInt_departamento3A', 'cabInt_departamento3B',
+            // Vigilancia por departamento (pueden ser 0)
+            'vigilancia_piso1', 'vigilancia_departamento2A', 'vigilancia_departamento2B',
+            'vigilancia_departamento3A', 'vigilancia_departamento3B'
         ];
         
         todosLosCamposNumericos.forEach(campo => {
@@ -153,7 +156,13 @@ function obtenerNombreCampo(campo) {
         'cabInt_departamento2A': 'Cable/Internet Depto 2A',
         'cabInt_departamento2B': 'Cable/Internet Depto 2B',
         'cabInt_departamento3A': 'Cable/Internet Depto 3A',
-        'cabInt_departamento3B': 'Cable/Internet Depto 3B'
+        'cabInt_departamento3B': 'Cable/Internet Depto 3B',
+        // Vigilancia
+        'vigilancia_piso1': 'Vigilancia Piso 1',
+        'vigilancia_departamento2A': 'Vigilancia Depto 2A',
+        'vigilancia_departamento2B': 'Vigilancia Depto 2B',
+        'vigilancia_departamento3A': 'Vigilancia Depto 3A',
+        'vigilancia_departamento3B': 'Vigilancia Depto 3B'
     };
     return nombres[campo] || campo;
 }

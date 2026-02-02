@@ -160,7 +160,14 @@ function cargarCalculoAnterior(id) {
     setInputValue('cabInt_departamento2B', datosEntrada.cabInt_departamento2B || '');
     setInputValue('cabInt_departamento3A', datosEntrada.cabInt_departamento3A || '');
     setInputValue('cabInt_departamento3B', datosEntrada.cabInt_departamento3B || '');
-    
+
+    // Vigilancia
+    setInputValue('vigilancia_piso1', datosEntrada.vigilancia_piso1 || '');
+    setInputValue('vigilancia_departamento2A', datosEntrada.vigilancia_departamento2A || '');
+    setInputValue('vigilancia_departamento2B', datosEntrada.vigilancia_departamento2B || '');
+    setInputValue('vigilancia_departamento3A', datosEntrada.vigilancia_departamento3A || '');
+    setInputValue('vigilancia_departamento3B', datosEntrada.vigilancia_departamento3B || '');
+
     // Actualizar localStorage con los nuevos valores
     const formFields = document.forms["form_principal"].elements;
     for (let field of formFields) {
@@ -231,7 +238,15 @@ function verDetallesCalculo(id) {
         safeParseFloat(entrada.datos_formulario.cabInt_departamento3A) +
         safeParseFloat(entrada.datos_formulario.cabInt_departamento3B)
     ).toFixed(2);
-    
+
+    const totalVigilancia = (
+        safeParseFloat(entrada.datos_formulario.vigilancia_piso1) +
+        safeParseFloat(entrada.datos_formulario.vigilancia_departamento2A) +
+        safeParseFloat(entrada.datos_formulario.vigilancia_departamento2B) +
+        safeParseFloat(entrada.datos_formulario.vigilancia_departamento3A) +
+        safeParseFloat(entrada.datos_formulario.vigilancia_departamento3B)
+    ).toFixed(2);
+
     // Preparar contenido del modal
     let contenido = `
         <h4>${getMonthName(entrada.mes)} ${entrada.año}</h4>
@@ -248,6 +263,7 @@ function verDetallesCalculo(id) {
             <tr><td><strong>Total Agua:</strong></td><td>S/${safeParseFloat(entrada.datos_formulario.total_agua).toFixed(2)}</td></tr>
             <tr><td><strong>Total Gas:</strong></td><td>S/${totalGas}</td></tr>
             <tr><td><strong>Total Cable/Internet:</strong></td><td>S/${totalCableInternet}</td></tr>
+            <tr><td><strong>Total Vigilancia:</strong></td><td>S/${totalVigilancia}</td></tr>
         </table>
     `;
     
