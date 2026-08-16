@@ -1,7 +1,7 @@
 // Service Worker para Cuentas Casa PWA
 // Proporciona funcionalidad offline y cache de recursos
 
-const CACHE_NAME = 'cuentas-casa-v3.0.0';
+const CACHE_NAME = 'cuentas-casa-v3.0.2';
 const CACHE_URLS = [
   // Archivos locales de la aplicación
   './',
@@ -23,7 +23,7 @@ const CACHE_URLS = [
   
   // Recursos externos de CDN (críticos para el funcionamiento)
   'https://cdn.tailwindcss.com',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
   'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
   

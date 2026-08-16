@@ -41,8 +41,8 @@ function aplicarTema(tema) {
             // Si es tema claro, mostrar icono de luna para cambiar a oscuro
             botonTema.innerHTML = "<i class='fa-solid fa-moon'></i>&nbsp;&nbsp;Cambiar Tema";
         } else {
-            // Si es tema oscuro, mostrar icono de brillo para cambiar a claro
-            botonTema.innerHTML = "<i class='fa-solid fa-brightness'></i>&nbsp;&nbsp;Cambiar Tema";
+            // Si es tema oscuro, mostrar icono de sol para cambiar a claro
+            botonTema.innerHTML = "<i class='fa-solid fa-sun'></i>&nbsp;&nbsp;Cambiar Tema";
         }
     }
 }

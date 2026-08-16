@@ -145,7 +145,7 @@ npx serve
 | Librería | Uso | URL |
 |----------|-----|-----|
 | **[Tailwind CSS](https://tailwindcss.com)** | Framework UI minimalista | `@tailwindcss/tailwind@2.0.6` |
-| **[Font Awesome](https://fontawesome.com)** | Iconos vectoriales | `@fortawesome/fontawesome-free@6.6.0` |
+| **[Font Awesome](https://fontawesome.com)** | Iconos vectoriales | `@fortawesome/fontawesome-free@6.7.2` |
 | **[jsPDF](https://github.com/MrRio/jsPDF)** | Generación de PDFs | `jspdf@2.5.1` |
 
 ### **⚡ Características Técnicas PWA**

@@ -22,8 +22,12 @@ function createPDF(config = {}) {
     };
     
     const finalConfig = { ...defaultConfig, ...config };
-    
-    const doc = new jsPDF({
+
+    // jsPDF 2.x expone el constructor en window.jspdf.jsPDF (build UMD);
+    // se mantiene el global jsPDF como respaldo por compatibilidad
+    const PDFConstructor = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
+
+    const doc = new PDFConstructor({
         format: finalConfig.format
     });
     
@@ -46,7 +50,8 @@ function addTextToPDF(doc, text, x, y, options = {}) {
     if (!doc || !text) return;
     
     const align = options.align || 'left';
-    doc.text(text, x, y, align);
+    // jsPDF 2.x recibe la alineación dentro de un objeto de opciones
+    doc.text(text, x, y, { align: align });
 }
 
 /**
@@ -83,7 +88,9 @@ function addRectangleToPDF(doc, x, y, width, height, style = 'S') {
  */
 function setPDFFontType(doc, fontType) {
     if (!doc) return;
-    doc.setFontType(fontType);
+    // jsPDF 2.x eliminó setFontType(); el estilo se aplica con setFont(familia, estilo)
+    const currentFont = doc.getFont().fontName;
+    doc.setFont(currentFont, fontType);
 }
 
 /**
