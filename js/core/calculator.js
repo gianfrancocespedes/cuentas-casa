@@ -264,8 +264,8 @@ function generarPDF(piso) {
         // --------------------------------------------------------------------
         // ENCABEZADO DEL DOCUMENTO
         // --------------------------------------------------------------------
-        addCenteredTextToPDF(doc, "Piso 1", 10);  // Título centrado en Y=10
-        addCenteredTextToPDF(doc, `${getMonthName(datos.calculo_mes)}/${datos.calculo_anio}`, 15);  // Período
+        addCenteredTextToPDF(doc, "Piso 1", 48.0);  // Título centrado en Y=10
+        addCenteredTextToPDF(doc, `${getMonthName(datos.calculo_mes)}/${datos.calculo_anio}`, 66.0);  // Período
 
         // --------------------------------------------------------------------
         // CÁLCULO DE LUZ PARA PISO 1
@@ -273,7 +273,7 @@ function generarPDF(piso) {
         // LÓGICA: Piso 1 paga = Total Factura Luz - (Suma de todos los departamentos)
         // Ejemplo: Si factura total = 500 y departamentos pagan 350, Piso 1 = 150
         num = (parseFloat(datos.total_luz) - getTotalLuzDep()).toFixed(2);
-        addTextToPDF(doc, `Luz: ${parseFloat(datos.total_luz).toFixed(2)} - ${getTotalLuzDep().toFixed(2)} = S/${num}`, 20, 25);
+        addTextToPDF(doc, `Luz: ${parseFloat(datos.total_luz).toFixed(2)} - ${getTotalLuzDep().toFixed(2)} = S/${num}`, 80.0, 102.0);
 
         // --------------------------------------------------------------------
         // CÁLCULO DE AGUA PARA PISO 1
@@ -281,11 +281,11 @@ function generarPDF(piso) {
         // LÓGICA: Distribución proporcional por número de personas
         // PASO 1: Calcular costo por persona = Total Agua / Total de personas en la casa
         // PASO 2: Multiplicar por personas del Piso 1
-        addTextToPDF(doc, `Agua:`, 20, 35);
+        addTextToPDF(doc, `Agua:`, 80.0, 138.0);
         num = (parseFloat(datos.total_agua) / getTotalPersonas()).toFixed(2);
         // String.fromCharCode(247) = símbolo de división ÷
-        addTextToPDF(doc, `${datos.total_agua} ${String.fromCharCode(247)} ${getTotalPersonas()} = S/${num}`, 30, 40);
-        addTextToPDF(doc, `${num} x ${datos.personas_piso1} = S/${(num * datos.personas_piso1).toFixed(2)}`, 30, 45);
+        addTextToPDF(doc, `${datos.total_agua} ${String.fromCharCode(247)} ${getTotalPersonas()} = S/${num}`, 116.0, 156.0);
+        addTextToPDF(doc, `${num} x ${datos.personas_piso1} = S/${(num * datos.personas_piso1).toFixed(2)}`, 116.0, 174.0);
 
         // --------------------------------------------------------------------
         // GAS PARA PISO 1 (VALOR DIRECTO)
@@ -295,8 +295,8 @@ function generarPDF(piso) {
         // Si se desea hacerlo condicional (solo mostrar cuando > 0), seguir el
         // mismo patrón usado en Vigilancia (líneas 234-242) y en el resumen
         // de departamentos (líneas 386-397).
-        addTextToPDF(doc, `Gas:`, 20, 55);
-        addTextToPDF(doc, `S/${datos.gas_piso1}`, 30, 60);
+        addTextToPDF(doc, `Gas:`, 80.0, 210.0);
+        addTextToPDF(doc, `S/${datos.gas_piso1}`, 116.0, 228.0);
 
         // --------------------------------------------------------------------
         // CABLE E INTERNET PARA PISO 1 (VALOR DIRECTO)
@@ -306,8 +306,8 @@ function generarPDF(piso) {
         // Si se desea hacerlo condicional (solo mostrar cuando > 0), seguir el
         // mismo patrón usado en Vigilancia (líneas 234-242) y en el resumen
         // de departamentos (líneas 386-397).
-        addTextToPDF(doc, `Cable e internet:`, 20, 70);
-        addTextToPDF(doc, `S/${datos.cabInt_piso1}`, 30, 75);
+        addTextToPDF(doc, `Cable e internet:`, 80.0, 264.0);
+        addTextToPDF(doc, `S/${datos.cabInt_piso1}`, 116.0, 282.0);
 
         // --------------------------------------------------------------------
         // VIGILANCIA PARA PISO 1 (VALOR DIRECTO - CONDICIONAL)
@@ -316,8 +316,8 @@ function generarPDF(piso) {
         // A diferencia de Gas y Cable/Internet, Vigilancia SÍ es condicional
         const vigilanciaPiso1Value = parseFloat(datos.vigilancia_piso1) || 0;
         if (vigilanciaPiso1Value > 0) {
-            addTextToPDF(doc, `Vigilancia:`, 20, 85);
-            addTextToPDF(doc, `S/${datos.vigilancia_piso1}`, 30, 90);
+            addTextToPDF(doc, `Vigilancia:`, 80.0, 318.0);
+            addTextToPDF(doc, `S/${datos.vigilancia_piso1}`, 116.0, 336.0);
         }
 
     // ========================================================================
@@ -341,8 +341,8 @@ function generarPDF(piso) {
         // --------------------------------------------------------------------
         // ENCABEZADO DEL DOCUMENTO
         // --------------------------------------------------------------------
-        addCenteredTextToPDF(doc, `Departamento ${piso}`, 10);
-        addCenteredTextToPDF(doc, `${getMonthName(datos.calculo_mes)}/${datos.calculo_anio}`, 15);
+        addCenteredTextToPDF(doc, `Departamento ${piso}`, 48.0);
+        addCenteredTextToPDF(doc, `${getMonthName(datos.calculo_mes)}/${datos.calculo_anio}`, 66.0);
 
         // ====================================================================
         // CÁLCULO DETALLADO DE LUZ (PASO A PASO)
@@ -364,44 +364,57 @@ function generarPDF(piso) {
         //   ___________________
         //   TOTAL LUZ:         123.00
         // ====================================================================
-        addTextToPDF(doc, `Luz:`, 20, 25);
+        // Columnas de la operacion vertical de luz:
+        // los numeros se alinean a la derecha en COL_NUM (borde derecho de las
+        // lineas de operacion) para que sus decimales queden en columna,
+        // y las etiquetas "-> ..." arrancan en COL_ETIQUETA.
+        const COL_NUM = 198.8;
+        const COL_ETIQUETA = 209.6;
+
+        addTextToPDF(doc, `Luz:`, 80.0, 102.0);
 
         // PASO 1: Obtener lectura del medidor del mes anterior
         // Construye el nombre del campo dinámicamente: "medidor_pasado_departamento2A"
         accJSON = "medidor_pasado_departamento" + piso;
         let num1 = datos[accJSON];
-        addTextToPDF(doc, `${num1} -> Mes anterior`, 30, 30);
+        addTextToPDF(doc, `${num1}`, COL_NUM, 120.0, { align: 'right' });
+        addTextToPDF(doc, `-> Mes anterior`, COL_ETIQUETA, 120.0);
 
         // PASO 2: Obtener lectura del medidor del mes actual
         accJSON = "medidor_actual_departamento" + piso;
         let num2 = datos[accJSON];
-        addTextToPDF(doc, `${num2} -> Mes actual`, 30, 35);
+        addTextToPDF(doc, `${num2}`, COL_NUM, 138.0, { align: 'right' });
+        addTextToPDF(doc, `-> Mes actual`, COL_ETIQUETA, 138.0);
 
         // PASO 3: Calcular consumo en KW (diferencia entre lecturas)
-        addLineToPDF(doc, 29, 36, 53, 36);   // Línea horizontal de resta
+        addLineToPDF(doc, 112.4, 141.6, 198.8, 141.6);   // Línea horizontal de resta
         num1 = (parseFloat(num2) - parseFloat(num1)).toFixed(2);
-        addTextToPDF(doc, `${num1}`, 35, 40);  // Resultado del consumo
+        addTextToPDF(doc, `${num1}`, COL_NUM, 156.0, { align: 'right' });  // Resultado del consumo
 
         // PASO 4: Multiplicar consumo por tarifa del KW
         num2 = datos.valor_kw;
-        addTextToPDF(doc, `x ${num2} -> KW`, 25, 45);
-        addLineToPDF(doc, 29, 46, 53, 46);   // Línea horizontal de multiplicación
+        addTextToPDF(doc, `x ${num2}`, COL_NUM, 174.0, { align: 'right' });
+        addTextToPDF(doc, `-> KW`, COL_ETIQUETA, 174.0);
+        addLineToPDF(doc, 112.4, 177.6, 198.8, 177.6);   // Línea horizontal de multiplicación
         num1 = (num1 * parseFloat(num2)).toFixed(2);
-        addTextToPDF(doc, `${num1}`, 35, 50);  // Subtotal antes de impuestos
+        addTextToPDF(doc, `${num1}`, COL_NUM, 192.0, { align: 'right' });  // Subtotal antes de impuestos
 
         // PASO 5: Calcular y agregar IGV (Impuesto General a las Ventas = 18%)
         num2 = (0.18 * num1).toFixed(2);
-        addTextToPDF(doc, `${num2} -> 18%`, 38, 55);
-        addLineToPDF(doc, 29, 56, 53, 56);   // Línea horizontal de suma
+        addTextToPDF(doc, `${num2}`, COL_NUM, 210.0, { align: 'right' });
+        addTextToPDF(doc, `-> 18%`, COL_ETIQUETA, 210.0);
+        addLineToPDF(doc, 112.4, 213.6, 198.8, 213.6);   // Línea horizontal de suma
         num1 = (num1 * 1.0 + num2 * 1.0).toFixed(2);  // Multiplicar por 1.0 para asegurar suma numérica
-        addTextToPDF(doc, `${num1}`, 35, 60);
+        addTextToPDF(doc, `${num1}`, COL_NUM, 228.0, { align: 'right' });
 
         // PASO 6: Agregar cargo fijo de alumbrado público
         num2 = datos.alumbrado_publico;
-        addTextToPDF(doc, `${num2} -> A. público`, 38, 65);
-        addLineToPDF(doc, 29, 66, 53, 66);   // Línea horizontal de suma final
+        addTextToPDF(doc, `${num2}`, COL_NUM, 246.0, { align: 'right' });
+        addTextToPDF(doc, `-> A. público`, COL_ETIQUETA, 246.0);
+        addLineToPDF(doc, 112.4, 249.6, 198.8, 249.6);   // Línea horizontal de suma final
         num1 = (num1 * 1.0 + num2 * 1.0).toFixed(2);
-        addTextToPDF(doc, `${num1} -> Total Luz`, 35, 70);
+        addTextToPDF(doc, `${num1}`, COL_NUM, 264.0, { align: 'right' });
+        addTextToPDF(doc, `-> Total Luz`, COL_ETIQUETA, 264.0);
 
         // PASO 7: Guardar el total de luz calculado para este departamento
         // Este valor se usa después para calcular cuánto paga el Piso 1
@@ -416,16 +429,16 @@ function generarPDF(piso) {
         // PASO 1: Costo por persona = Total Agua / Total personas de la casa
         // PASO 2: Costo del departamento = Costo por persona × Personas del depto
         // ====================================================================
-        addTextToPDF(doc, `Agua:`, 10, 80);
+        addTextToPDF(doc, `Agua:`, 44.0, 300.0);
         num1 = datos.total_agua;  // Total de la factura de agua
         num2 = (num1 / getTotalPersonas()).toFixed(2);  // Costo por persona
         // String.fromCharCode(247) = símbolo ÷
-        addTextToPDF(doc, `${num1} ${String.fromCharCode(247)} ${getTotalPersonas()} = S/${num2}`, 20, 85);
+        addTextToPDF(doc, `${num1} ${String.fromCharCode(247)} ${getTotalPersonas()} = S/${num2}`, 62.0, 318.0);
 
         // Multiplicar por el número de personas en este departamento
         accJSON = "personas_departamento" + piso;
         num1 = (num2 * datos[accJSON]).toFixed(2);
-        addTextToPDF(doc, `${num2} x ${datos[accJSON]} = S/${num1} -> T. Agua`, 20, 90);
+        addTextToPDF(doc, `${num2} x ${datos[accJSON]} = S/${num1} -> T. Agua`, 62.0, 336.0);
         agua = num1;  // Guardar total de agua para el resumen final
 
         // ====================================================================
@@ -453,10 +466,13 @@ function generarPDF(piso) {
         // ====================================================================
         // Se presenta en un rectángulo visual para destacar el total final
         // Este resumen aparece en la parte inferior del PDF
-        addCenteredTextToPDF(doc, `Resumen`, 100);
+        addCenteredTextToPDF(doc, `Resumen`, 372.0);
 
-        // Dibujar rectángulo: X=10, Y=101, Ancho=105, Alto=20
-        addRectangleToPDF(doc, 10, 101, 105, 20);
+        // Recuadro del resumen: centrado respecto al ancho real de la pagina
+        // y dimensionado para envolver las tres lineas (etiquetas, valores y total)
+        const anchoPagina = getPDFPageSize(doc).width;
+        const cajaAncho = anchoPagina - 44.0 * 2;
+        addRectangleToPDF(doc, 44.0, 375.6, cajaAncho, 72.0);
 
         // Construir etiquetas y valores de forma condicional
         let summaryLabel = "Agua + Luz";
@@ -476,14 +492,15 @@ function generarPDF(piso) {
             summaryValues += ` + ${vigilancia}`;
         }
 
-        // Contenido del resumen
-        addCenteredTextToPDF(doc, summaryLabel, 105);
-        addCenteredTextToPDF(doc, summaryValues, 110);
+        // Contenido del resumen (fuente algo menor para que quepa dentro del recuadro)
+        setPDFFontSize(doc, 13);
+        addCenteredTextToPDF(doc, summaryLabel, 390.0);
+        addCenteredTextToPDF(doc, summaryValues, 408.0);
 
         // Total final en negrita y con tamaño aumentado para destacar
         setPDFFontType(doc, "bold");
         setPDFFontSize(doc, 20);  // Aumentar tamaño de fuente de 15 a 20
-        addCenteredTextToPDF(doc, `S/${Math.round(totalPiso)}.00`, 118);  // Y=118 para mayor separación
+        addCenteredTextToPDF(doc, `S/${Math.round(totalPiso)}.00`, 436.8);  // Y=118 para mayor separación
     }
 
     // ========================================================================

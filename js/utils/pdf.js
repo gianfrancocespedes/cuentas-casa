@@ -7,6 +7,7 @@
 /**
  * Crea un nuevo documento PDF con configuración básica
  * @param {object} config - Configuración del PDF
+ * @param {string} config.unit - Unidad de medida ('pt' por defecto)
  * @param {Array} config.format - Tamaño del documento [ancho, alto]
  * @param {number} config.fontSize - Tamaño de fuente
  * @param {string} config.font - Tipo de fuente
@@ -15,6 +16,7 @@
  */
 function createPDF(config = {}) {
     const defaultConfig = {
+        unit: "pt",
         format: [350, 400],
         fontSize: 15,
         font: "courier",
@@ -28,6 +30,7 @@ function createPDF(config = {}) {
     const PDFConstructor = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
 
     const doc = new PDFConstructor({
+        unit: finalConfig.unit,
         format: finalConfig.format
     });
     
