@@ -273,7 +273,7 @@ function generarPDF(piso) {
         // LÓGICA: Piso 1 paga = Total Factura Luz - (Suma de todos los departamentos)
         // Ejemplo: Si factura total = 500 y departamentos pagan 350, Piso 1 = 150
         num = (parseFloat(datos.total_luz) - getTotalLuzDep()).toFixed(2);
-        addTextToPDF(doc, `Luz: ${parseFloat(datos.total_luz).toFixed(2)} - ${getTotalLuzDep().toFixed(2)} = S/${num}`, 80.0, 102.0);
+        addTextToPDF(doc, `Luz: ${parseFloat(datos.total_luz).toFixed(2)} - ${getTotalLuzDep().toFixed(2)} = S/${num}`, 30.0, 102.0);
 
         // --------------------------------------------------------------------
         // CÁLCULO DE AGUA PARA PISO 1
@@ -281,11 +281,11 @@ function generarPDF(piso) {
         // LÓGICA: Distribución proporcional por número de personas
         // PASO 1: Calcular costo por persona = Total Agua / Total de personas en la casa
         // PASO 2: Multiplicar por personas del Piso 1
-        addTextToPDF(doc, `Agua:`, 80.0, 138.0);
+        addTextToPDF(doc, `Agua:`, 30.0, 138.0);
         num = (parseFloat(datos.total_agua) / getTotalPersonas()).toFixed(2);
         // String.fromCharCode(247) = símbolo de división ÷
-        addTextToPDF(doc, `${datos.total_agua} ${String.fromCharCode(247)} ${getTotalPersonas()} = S/${num}`, 116.0, 156.0);
-        addTextToPDF(doc, `${num} x ${datos.personas_piso1} = S/${(num * datos.personas_piso1).toFixed(2)}`, 116.0, 174.0);
+        addTextToPDF(doc, `${datos.total_agua} ${String.fromCharCode(247)} ${getTotalPersonas()} = S/${num}`, 62.0, 156.0);
+        addTextToPDF(doc, `${num} x ${datos.personas_piso1} = S/${(num * datos.personas_piso1).toFixed(2)}`, 62.0, 174.0);
 
         // --------------------------------------------------------------------
         // GAS PARA PISO 1 (VALOR DIRECTO)
@@ -295,8 +295,8 @@ function generarPDF(piso) {
         // Si se desea hacerlo condicional (solo mostrar cuando > 0), seguir el
         // mismo patrón usado en Vigilancia (líneas 234-242) y en el resumen
         // de departamentos (líneas 386-397).
-        addTextToPDF(doc, `Gas:`, 80.0, 210.0);
-        addTextToPDF(doc, `S/${datos.gas_piso1}`, 116.0, 228.0);
+        addTextToPDF(doc, `Gas:`, 30.0, 210.0);
+        addTextToPDF(doc, `S/${datos.gas_piso1}`, 62.0, 228.0);
 
         // --------------------------------------------------------------------
         // CABLE E INTERNET PARA PISO 1 (VALOR DIRECTO)
@@ -306,8 +306,8 @@ function generarPDF(piso) {
         // Si se desea hacerlo condicional (solo mostrar cuando > 0), seguir el
         // mismo patrón usado en Vigilancia (líneas 234-242) y en el resumen
         // de departamentos (líneas 386-397).
-        addTextToPDF(doc, `Cable e internet:`, 80.0, 264.0);
-        addTextToPDF(doc, `S/${datos.cabInt_piso1}`, 116.0, 282.0);
+        addTextToPDF(doc, `Cable e internet:`, 30.0, 264.0);
+        addTextToPDF(doc, `S/${datos.cabInt_piso1}`, 62.0, 282.0);
 
         // --------------------------------------------------------------------
         // VIGILANCIA PARA PISO 1 (VALOR DIRECTO - CONDICIONAL)
@@ -316,8 +316,8 @@ function generarPDF(piso) {
         // A diferencia de Gas y Cable/Internet, Vigilancia SÍ es condicional
         const vigilanciaPiso1Value = parseFloat(datos.vigilancia_piso1) || 0;
         if (vigilanciaPiso1Value > 0) {
-            addTextToPDF(doc, `Vigilancia:`, 80.0, 318.0);
-            addTextToPDF(doc, `S/${datos.vigilancia_piso1}`, 116.0, 336.0);
+            addTextToPDF(doc, `Vigilancia:`, 30.0, 318.0);
+            addTextToPDF(doc, `S/${datos.vigilancia_piso1}`, 62.0, 336.0);
         }
 
     // ========================================================================
